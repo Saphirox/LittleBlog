@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LittleBlog", "LittleBlog\LittleBlog.csproj", "{43C3B8A7-B0CF-406B-B33F-53D4D323F69E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LittleBlog.Tests", "LittleBlog.Tests\LittleBlog.Tests.csproj", "{D0853A3D-D53F-4201-80D3-E3DD962C56FF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{43C3B8A7-B0CF-406B-B33F-53D4D323F69E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43C3B8A7-B0CF-406B-B33F-53D4D323F69E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43C3B8A7-B0CF-406B-B33F-53D4D323F69E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43C3B8A7-B0CF-406B-B33F-53D4D323F69E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0853A3D-D53F-4201-80D3-E3DD962C56FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0853A3D-D53F-4201-80D3-E3DD962C56FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0853A3D-D53F-4201-80D3-E3DD962C56FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0853A3D-D53F-4201-80D3-E3DD962C56FF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
