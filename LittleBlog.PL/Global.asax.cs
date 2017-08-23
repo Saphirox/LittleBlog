@@ -16,7 +16,6 @@ namespace LittleBlog.PL
         void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup
-            GlobalConfiguration.Configuration.DependencyResolver = NinjectResolver
             AreaRegistration.RegisterAllAreas();
             MapperBuilder.BuildMapper();
             RouteConfig.RegisterRoutes(RouteTable.Routes);            

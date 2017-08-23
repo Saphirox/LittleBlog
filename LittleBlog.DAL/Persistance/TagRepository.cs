@@ -1,4 +1,5 @@
-﻿using LittleBlog.DAL.Repositories;
+﻿using System.Collections.Generic;
+using LittleBlog.DAL.Repositories;
 using LittleBlog.Entities.Article;
 
 namespace LittleBlog.DAL.Persistance
@@ -7,6 +8,11 @@ namespace LittleBlog.DAL.Persistance
     {
         public TagRepository(Context context) : base(context)
         {
+        }
+
+        public IEnumerable<Tag> GetAll()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
