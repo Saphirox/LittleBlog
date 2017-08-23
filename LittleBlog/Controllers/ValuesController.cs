@@ -7,7 +7,8 @@ using System.Web.Http;
 
 namespace LittleBlog.Controllers
 {
-    [Authorize]
+
+    [Authorize()]
     public class ValuesController : ApiController
     {
         // GET api/values
