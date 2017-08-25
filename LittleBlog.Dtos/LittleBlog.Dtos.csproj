@@ -41,8 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Article\ArticleDTO.cs" />
+    <Compile Include="Article\GetArticleDTO.cs" />
     <Compile Include="Article\CommentDTO.cs" />
+    <Compile Include="Article\CreateArticleDTO.cs" />
     <Compile Include="Article\ImageDTO.cs" />
     <Compile Include="Article\PublishEditDate.cs" />
     <Compile Include="Article\TagDTO.cs" />

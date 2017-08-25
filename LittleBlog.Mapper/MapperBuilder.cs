@@ -9,9 +9,7 @@ namespace LittleBlog.Mapper
 {
     public class MapperBuilder
     {
-        public static IMapper Mapper;
-
-        public static void BuildMapper()
+        public static IMapper BuildMapper()
         {
             var config = new MapperConfiguration((cfg) =>
             {
@@ -19,8 +17,8 @@ namespace LittleBlog.Mapper
                 cfg.AddProfile(new ArticleProfileViewModel());
             });
 
-            Mapper = config.CreateMapper();
-            config.AssertConfigurationIsValid();
+            //config.AssertConfigurationIsValid();
+            return config.CreateMapper();
         }
     }
 }

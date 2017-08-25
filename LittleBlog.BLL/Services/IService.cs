@@ -1,7 +1,11 @@
-﻿namespace LittleBlog.BLL.Services
+﻿using AutoMapper;
+using LittleBlog.DAL.Repositories;
+
+namespace LittleBlog.BLL.Services
 {
-    public class IService
+    public interface IService
     {
-        
+        IUnitOfWork UnitOfWork { get; }
+        IMapper Mapper { get; }
     }
 }

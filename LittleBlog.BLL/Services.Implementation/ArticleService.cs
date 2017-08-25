@@ -9,82 +9,78 @@ using LittleBlog.Entities.Article;
 
 namespace LittleBlog.BLL.Services.Implementation
 {
-    public class ArticleService : IArticleService
+    public class ArticleService : Service, IArticleService
     {
-        private IUnitOfWork UnitOfWork { get; }
+        public ArticleService(IUnitOfWork unitOfWork, IMapper mapper)
+           : base (unitOfWork, mapper)
+        {}
 
-        public ArticleService(IUnitOfWork unitOfWork)
+        public void AddArticle(CreateArticleDTO articleDto)
         {
-            UnitOfWork = unitOfWork;
-        }
-
-        public void AddArticle(ArticleDTO articleDto)
-        {
-            this.AddRemainderTags(Mapper.Map<IEnumerable<TagDTO>, IEnumerable<Tag>>(articleDto.Tags));
-            
-            var entity = Mapper.Map<ArticleDTO, Article>(articleDto);
-
-            entity.PublishEditDates.Add(new PublishEditDate { Date = DateTime.UtcNow });
+            var entity = Mapper.Map<CreateArticleDTO, Article>(articleDto);
+            entity.Tags = this.GetRemainderTags(entity.Tags);
 
             UnitOfWork.ArticleRepository.Add(entity);
             UnitOfWork.Commit();
         }
 
-        public IEnumerable<ArticleDTO> ShowArticles()
+        public IEnumerable<GetArticleDTO> ShowArticles()
         {
             return Mapper.Map<IEnumerable<Article>, 
-                IEnumerable<ArticleDTO>>(UnitOfWork.ArticleRepository.GetAll());
+                IEnumerable<GetArticleDTO>>(UnitOfWork.ArticleRepository.GetAll());
         }
 
-        public IEnumerable<ArticleDTO> ShowPreviewArticle(int startWith, int count)
+        public IEnumerable<GetArticleDTO> ShowPreviewArticle(int startWith=0, int count=0)
         {
-            return Mapper.Map<IEnumerable<Article>, IEnumerable<ArticleDTO>>(
-                UnitOfWork.ArticleRepository.GetAll()
-            ).Skip(startWith).Take(count);
+            var entities = UnitOfWork.ArticleRepository.GetAll().ToList();
+            var dtos = Mapper.Map<IEnumerable<Article>, IEnumerable<GetArticleDTO>>(
+                entities);
+            return dtos.Skip(startWith).Take(count);
+            
         }
 
-        public ArticleDTO GetArticeById(int id)
+        public GetArticleDTO GetArticleById(int id)
         {
-            return Mapper.Map<Article, ArticleDTO>(
+            return Mapper.Map<Article, GetArticleDTO>(
                 UnitOfWork.ArticleRepository.GetById(id)
             );
         }
 
-        public void UpdateArticle(ArticleDTO articleDto)
+        public void UpdateArticle(GetArticleDTO getArticleDto)
         {
-            UnitOfWork.ArticleRepository.Update(Mapper.Map<ArticleDTO, Article>(articleDto));
+            UnitOfWork.ArticleRepository.Update(Mapper.Map<GetArticleDTO, Article>(getArticleDto));
             UnitOfWork.Commit();
         }
 
         public void DeleteArticle(int id)
         {
-           throw new NotImplementedException();
+            var entity = UnitOfWork.ArticleRepository.GetById(id);
+            UnitOfWork.ArticleRepository.Delete(entity);
+            UnitOfWork.Commit();
         }
 
-        public IEnumerable<ArticleDTO> GetArticlesBy(Func<ArticleDTO, bool> expression)
+        public IEnumerable<GetArticleDTO> GetArticlesBy(Func<GetArticleDTO, bool> expression)
         {
             return
-                Mapper.Map<IEnumerable<Article>, IEnumerable<ArticleDTO>>(
+                Mapper.Map<IEnumerable<Article>, IEnumerable<GetArticleDTO>>(
                     UnitOfWork.ArticleRepository.GetAll()
                 ).Where(expression);
         }
 
-        public IEnumerable<ArticleDTO> GetArticlesByTags(IEnumerable<TagDTO> tags)
+        public IEnumerable<GetArticleDTO> GetArticlesByTags(IEnumerable<TagDTO> tags)
         {
             return
-                Mapper.Map<IEnumerable<Article>, IEnumerable<ArticleDTO>>(
-                    UnitOfWork.ArticleRepository.GetAll()
-                ).Where(x => x.Tags.Intersect((ICollection<TagDTO>)tags).Count() == tags.Count());
+                Mapper.Map<IEnumerable<Article>, IEnumerable<GetArticleDTO>>(
+                    UnitOfWork.ArticleRepository.GetAll())
+                    .Where(x => x.Tags.Intersect((ICollection<TagDTO>)tags).Count() == tags.Count());
         }
 
         #region Helpers
 
-        public void AddRemainderTags(IEnumerable<Tag> source)
+        public ICollection<Tag> GetRemainderTags(ICollection<Tag> source)
         {
-            foreach (var tag in source.Distinct().Except(this.UnitOfWork.TagRepository.GetAll()))
-            {
-                this.UnitOfWork.TagRepository.Add(tag);
-            }
+            return source.Distinct()
+                         .Except(this.UnitOfWork.TagRepository.GetAll()).ToList();
         }
 
         #endregion

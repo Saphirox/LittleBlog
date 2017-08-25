@@ -1,4 +1,4 @@
-﻿using LittleBlog.DAL.Persistance;
+﻿using LittleBlog.DAL.Persistence;
 using LittleBlog.DAL.Repositories;
 using Ninject.Modules;
 

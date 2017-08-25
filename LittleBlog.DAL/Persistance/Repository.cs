@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using LittleBlog.DAL.Repositories;
 using LittleBlog.Entities.Shared;
 
-namespace LittleBlog.DAL.Persistance
+namespace LittleBlog.DAL.Persistence
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity: Entity
     {
@@ -43,12 +43,12 @@ namespace LittleBlog.DAL.Persistance
         {
             if (entity != null)
             {
-                if (DbContext.Entry<TEntity>(entity).State == EntityState.Detached)
-                {
-                    DbContext.Set<TEntity>().Attach(entity);
-                }
-
-                DbContext.Entry<TEntity>(entity).State = EntityState.Deleted;
+                //if (DbContext.Entry<TEntity>(entity).State == EntityState.Detached)
+                //{
+                //    DbContext.Set<TEntity>().Attach(entity);
+                //}
+                DbContext.Set<TEntity>().Remove(entity);
+                //DbContext.Entry<TEntity>(entity).State = EntityState.Deleted;
             }
         }
     }

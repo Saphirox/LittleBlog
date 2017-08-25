@@ -7,7 +7,11 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 using System.Web.Http;
+using System.Web.Optimization;
+using LittleBlog.Dependencies;
 using LittleBlog.Mapper;
+using LittleBlog.PL.App_Start;
+using Ninject;
 
 namespace LittleBlog.PL
 {
@@ -17,8 +21,9 @@ namespace LittleBlog.PL
         {
             // Code that runs on application startup
             AreaRegistration.RegisterAllAreas();
-            MapperBuilder.BuildMapper();
-            RouteConfig.RegisterRoutes(RouteTable.Routes);            
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            DependencyResolver.SetResolver(new NinjectDependencyResolver(new StandardKernel()));
         }
     }
 }

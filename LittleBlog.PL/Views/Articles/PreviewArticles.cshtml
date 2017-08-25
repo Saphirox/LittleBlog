@@ -1,8 +1,37 @@
-﻿@model dynamic
+﻿@model IEnumerable<LittleBlog.ViewModels.Article.ArticleViewModel>
 
 @{
     ViewBag.Title = "Articles";
     Layout = "../Shared/_Layout.cshtml";
 }
 
-<h2>title</h2>
+<div class="container">
+    <h2>Preview articles</h2>
+
+    @foreach (var article in Model)
+    {
+        <div class="card">
+            <div>
+                @using (Html.BeginForm("DeleteArticle", "Articles", FormMethod.Post))
+                {
+                    @Html.Hidden("id", article.Id)
+                    <button class="btn btn-danger">Delete</button>
+                }
+            </div>
+            <div class='card-body'>
+                @article.Header
+                <br/>
+                Time for reading article @article.TimeForRead
+                <br/>
+                @article.Description
+                @foreach (var tag in article.Tags)
+                {
+                    <span class="badge badge-dark">@tag.Name</span>
+                }
+            </div>
+
+        </div>   
+    }
+</div>
+
+@Html.ActionLink("Create article", "CreateArticle", new {count=1, startWith=0})

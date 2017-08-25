@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using LittleBlog.DAL.Persistance;
+using LittleBlog.DAL.Persistence;
 using LittleBlog.Entities.Article;
 
 namespace LittleBlog.DAL.Repositories

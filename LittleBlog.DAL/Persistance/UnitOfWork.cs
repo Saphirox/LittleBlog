@@ -1,14 +1,20 @@
 ﻿using LittleBlog.DAL.Repositories;
 
-namespace LittleBlog.DAL.Persistance
+namespace LittleBlog.DAL.Persistence
 {
     public class UnitOfWork : IUnitOfWork
     {
         public Context DbContext { get; set; }
 
-        public UnitOfWork(Context dbContext)
+        public UnitOfWork(Context dbContext, 
+            IArticleRepository articleRepository, 
+            ITagRepository tagRepository, 
+            ICommentRepository commentRepository)
         {
             DbContext = dbContext;
+            ArticleRepository = articleRepository;
+            TagRepository = tagRepository;
+            CommentRepository = commentRepository;
         }
     
         public IArticleRepository ArticleRepository { get; set; }

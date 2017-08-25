@@ -1,7 +1,7 @@
 ﻿using LittleBlog.DAL.Repositories;
 using LittleBlog.Entities.Article;
 
-namespace LittleBlog.DAL.Persistance
+namespace LittleBlog.DAL.Persistence
 {
     public class CommentRepository : Repository<Comment>, ICommentRepository
     {

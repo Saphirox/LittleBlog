@@ -12,5 +12,10 @@ namespace LittleBlog.PL.Controllers
         {
             return View();
         }
+
+        public ActionResult About()
+        {
+            return View();
+        }
     }
 }

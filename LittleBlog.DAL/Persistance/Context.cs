@@ -1,8 +1,9 @@
+using LittleBlog.DAL.Persistence.Configuration;
 using LittleBlog.Entities.Article;
 using LittleBlog.Entities.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace LittleBlog.DAL.Persistance
+namespace LittleBlog.DAL.Persistence
 {
     using System;
     using System.Data.Entity;
@@ -12,7 +13,14 @@ namespace LittleBlog.DAL.Persistance
     {
         public Context()
             : base("name=Context")
-        {}
+        {
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Configurations.Add(new ArticleConfiguration());
+            base.OnModelCreating(modelBuilder);
+        }
 
         public IDbSet<Article> Articles { get; set; }
         public IDbSet<Tag> Tags { get; set; }

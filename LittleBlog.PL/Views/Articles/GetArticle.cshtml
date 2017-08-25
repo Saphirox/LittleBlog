@@ -1,0 +1,51 @@
+﻿@model LittleBlog.ViewModels.Article.ArticleViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div>
+        @using (Html.BeginForm("DeleteArticle", "Articles", FormMethod.Post))
+        {
+            @Html.Hidden("id", Model.Id)
+            <button class="btn btn-danger">Delete</button>
+        }
+    </div>
+    <div class='card-body'>
+        @Model.Header
+        <br/>
+        Time for reading article @Model.TimeForRead
+        <br/>
+        @Model.Description
+        @foreach (var tag in Model.Tags)
+        {
+            <span class="badge badge-dark">@tag.Name</span>
+        }
+    </div>
+
+    <div>
+        @using (Html.BeginForm("CreateCommentAjax", "Articles", FormMethod.Post, new AjaxOptions()
+        {
+            UpdateTargetId = "comments",
+            OnBegin = "$('#loader').fadeIn(200)",
+            OnComplete = "$('#loader').fadeOut(200)",
+            OnFailure = "alert('Error')"
+        }))
+        {
+            <div class="form-group">
+                @Html.TextArea("comment", new { @class = "form-control" });
+                @Html.Hidden("articleId", Model.Id)
+            </div>
+        }
+    </div>
+    <img id="loader" src="https://loading.io/spinners/ellipsis/index.discuss-ellipsis-preloader.svg" alt="Alternate Text" />
+    <div id="comments">
+        @foreach (var comment in Model.Comments)
+        {
+            <p>@comment</p>
+        }
+    </div>
+
+</div>   

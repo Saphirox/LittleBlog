@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using LittleBlog.DAL.Repositories;
 using LittleBlog.Entities.Article;
 
-namespace LittleBlog.DAL.Persistance
+namespace LittleBlog.DAL.Persistence
 {
     public class TagRepository : Repository<Tag>, ITagRepository
     {
@@ -10,9 +11,18 @@ namespace LittleBlog.DAL.Persistance
         {
         }
 
+        /// <summary>
+        /// Get tags without articles 
+        /// </summary>
+        /// <returns>IEnumerable</returns>
         public IEnumerable<Tag> GetAll()
         {
-            throw new System.NotImplementedException();
+            return DbContext.Tags;
+        }
+
+        public IEnumerable<Tag> GetAllIncludeArticles()
+        {
+            return DbContext.Tags.Include(t => t.Articles);
         }
     }
 }

@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using LittleBlog.Dtos.Article;
 using LittleBlog.Entities.Article;
 using LittleBlog.ViewModels.Article;
@@ -9,8 +13,18 @@ namespace LittleBlog.Mapper
     {
         public ArticleProfileViewModel()
         {
-            CreateMap<Article, ArticleDTO>().ReverseMap();
-            CreateMap<ArticleViewModel, ArticleDTO>().ReverseMap();
+            CreateMap<CreateArticleViewModel, CreateArticleDTO>()
+                .ForMember(src => src.Tags, 
+                    opt => opt.MapFrom(src => src.Tags.Split(' ')
+                        .Select(x => new TagDTO { Name = x }).ToList()));
+
+            CreateMap<CreateArticleDTO, Article>()
+                .ForMember(src => src.PublishEditDates,
+                    opt => opt.MapFrom(src => new List<PublishEditDateDTO>
+                        {new PublishEditDateDTO {Date = DateTime.UtcNow}}));
+            
+            CreateMap<Article, GetArticleDTO>().ReverseMap();
+            CreateMap<ArticleViewModel, GetArticleDTO>().ReverseMap();
 
             CreateMap<CommentDTO, Comment>().ReverseMap();
             CreateMap<CommentDTO, CommentViewModel>().ReverseMap();

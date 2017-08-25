@@ -10,30 +10,31 @@ namespace LittleBlog.PL.Controllers
 {
     public class BaseController : Controller
     {
-        protected IMapper _mapper;
+        protected IMapper Mapper;
 
         public BaseController(IMapper mapper)
         {
-            _mapper = mapper;
+            Mapper = mapper;
         }
 
-        public ActionResult CreateActionResult(Func<ActionResult> result)
+        public ActionResult CreateActionResult(Func<ActionResult> request)
         {
+            ActionResult result = null;
+
             try
             {
-                return result();
+                result = request();
             }
             catch (DbUpdateException ex)
             {
-                var error = ex.InnerException;
+                result = View("Error", ex.Message);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                // TODO: hard code
-                var error = e.InnerException;
+                result = View("Error", ex.Message);
             }
 
-            return result();
+            return result;
         }
     }
 }

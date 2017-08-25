@@ -32,6 +32,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Annotations, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.3.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Article\ArticleViewModel.cs" />
     <Compile Include="Article\CommentViewModel.cs" />
+    <Compile Include="Article\CreateArticleViewModel.cs" />
     <Compile Include="Article\ImageViewModel.cs" />
     <Compile Include="Article\PublishEditDateViewModel.cs" />
     <Compile Include="Article\TagViewModel.cs" />
@@ -51,6 +56,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\ViewModel.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
