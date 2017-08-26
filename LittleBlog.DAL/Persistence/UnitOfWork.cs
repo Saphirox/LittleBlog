@@ -1,4 +1,7 @@
-﻿using LittleBlog.DAL.Repositories;
+﻿using LittleBlog.DAL.Identity;
+using LittleBlog.DAL.Repositories;
+using LittleBlog.Entities.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace LittleBlog.DAL.Persistence
 {
@@ -6,8 +9,9 @@ namespace LittleBlog.DAL.Persistence
     {
         public Context DbContext { get; set; }
 
-        public UnitOfWork(Context dbContext, 
-            IArticleRepository articleRepository, 
+        public UnitOfWork(
+            Context dbContext, 
+            IArticleRepository articleRepository,
             ITagRepository tagRepository, 
             ICommentRepository commentRepository)
         {
@@ -15,11 +19,17 @@ namespace LittleBlog.DAL.Persistence
             ArticleRepository = articleRepository;
             TagRepository = tagRepository;
             CommentRepository = commentRepository;
+            
+            UserManager =  new AppUserManager(new UserStore<AppUser>(dbContext));
+            RoleManager = new AppRoleManager(new RoleStore<AppRole>(dbContext));
         }
     
         public IArticleRepository ArticleRepository { get; set; }
         public ITagRepository TagRepository { get; set; }
         public ICommentRepository CommentRepository { get; set; }
+        
+        public AppUserManager UserManager { get; }
+        public AppRoleManager RoleManager { get; }
 
         public int Commit()
         {
