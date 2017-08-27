@@ -10,6 +10,7 @@ using LittleBlog.ViewModels.Article;
 
 namespace LittleBlog.PL.Controllers
 {
+    [AllowAnonymous]
     [RoutePrefix("articles")]
     public class ArticlesController : BaseController
     {
@@ -18,100 +19,64 @@ namespace LittleBlog.PL.Controllers
 
         public ArticlesController(
             IArticleService articleService, 
-            IMapper mapper) : base(mapper)
+            IAccountService accountService, 
+            ICommentService commentService,
+            IMapper mapper) : base(accountService, mapper)
         {
             this._articleService = articleService;
+            this._commentService = commentService;
         }
         
-        [Route("index")]
-        public ActionResult Index()
-        {
-            return View();
-        }
-
+        /// <summary>
+        /// Get headers of article and it preview text
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="startWith"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("get-all")]
         public ActionResult PreviewArticles(int count=0, int startWith=0)
         {
             return CreateActionResult(() =>
             {
-                var articlesPreviewDto = this._articleService.ShowPreviewArticle(startWith, count);
-                return View(Mapper.Map<IEnumerable<GetArticleDTO>, IEnumerable<ArticleViewModel>>(articlesPreviewDto));
+                var articlesPreviewDto = this._articleService.ShowPreviewArticle(startWith, count, 20);
+                return View(Mapper.Map<IEnumerable<GetArticleDTO>, IEnumerable<GetArticleViewModel>>(articlesPreviewDto));
             });
         }
 
-        [HttpGet]
-        [Route("create")]
-        public ActionResult CreateArticle()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [Route("create")]
-        public ActionResult CreateArticle(CreateArticleViewModel model)
-        {
-
-            if (!ModelState.IsValid)
-            {
-                ModelState.AddModelError(string.Empty, "Error");
-                return View(model);
-            }
-
-            return CreateActionResult(() =>
-            {
-                this._articleService.AddArticle(
-                    Mapper.Map<CreateArticleViewModel, CreateArticleDTO>(model));
-                TempData["status"] = "Success";
-                return View();
-            });
-        }
-
-        [HttpPost]
-        [Route("create/update")]
-        public ActionResult UpdateArticle(ArticleViewModel model)
-        {
-            return CreateActionResult(() =>
-            {
-                this._articleService.UpdateArticle(
-                    Mapper.Map<ArticleViewModel, GetArticleDTO>(model));
-
-                return RedirectToAction("Index");
-            });
-        }
-
-        [HttpPost]
-        [Route("delete")]
-        public ActionResult DeleteArticle(int id)
-        {
-            return CreateActionResult(() =>
-            {
-                this._articleService.DeleteArticle(id);
-                return RedirectToAction("PreviewArticles");
-            });
-        }
-
+        /// <summary>
+        /// Get article by id 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("{id:int}")]
         public ActionResult GetArticle(int id)
         {
             return CreateActionResult(() =>
             {
-                return View(Mapper.Map<GetArticleDTO, ArticleViewModel>
+                return View(Mapper.Map<GetArticleDTO, GetArticleViewModel>
                     (this._articleService.GetArticleById(id)));
             });
         }
 
+        /// <summary>
+        /// Comment article using asynchronous 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="articleId"></param>
+        /// <returns></returns>
         [HttpPost]
+        [Route("create-comment")]
         public ActionResult CreateCommentAjax(CommentViewModel model, int articleId)
         {
             return CreateActionResult(() =>
             {
-                this._commentService.CreateCommentByArticleId(
-                    Mapper.Map<CommentViewModel, CommentDTO>(model), articleId
-                    );
 
-                return View("GetArticle", (Mapper.Map<GetArticleDTO, ArticleViewModel>
+                var dto = Mapper.Map<CommentViewModel, CommentDTO>(model);
+                this._commentService.CreateCommentByArticleId(dto, articleId);
+
+                return RedirectToAction("GetArticle", (Mapper.Map<GetArticleDTO, GetArticleViewModel>
                     (this._articleService.GetArticleById(articleId))));
             });
         }

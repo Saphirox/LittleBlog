@@ -91,6 +91,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\Result.cs" />
+    <Compile Include="Services.Implementation\AccountService.cs" />
     <Compile Include="Services.Implementation\ArticleService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services.Implementation\CommentService.cs" />
@@ -98,6 +100,7 @@
     <Compile Include="Services\IArticleService.cs" />
     <Compile Include="Services\ICommentService.cs" />
     <Compile Include="Services\IService.cs" />
+    <Compile Include="Services\IAccountService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -116,6 +119,11 @@
       <Project>{4B04FA53-198C-4E8A-8644-ECE20D5D3B3B}</Project>
       <Name>LittleBlog.Entities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LittleBlog.Exceptions\LittleBlog.Exceptions.csproj">
+      <Project>{2688BE71-49D2-48E4-8BEF-F3F5AB8AD2DF}</Project>
+      <Name>LittleBlog.Exceptions</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

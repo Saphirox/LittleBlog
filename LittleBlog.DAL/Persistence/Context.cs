@@ -26,5 +26,6 @@ namespace LittleBlog.DAL.Persistence
         public IDbSet<Tag> Tags { get; set; }
         public IDbSet<Comment> Comments { get; set; }
         public IDbSet<Image> Images { get; set; }
+        public IDbSet<Account> Accounts { get; set; }
     }
 }

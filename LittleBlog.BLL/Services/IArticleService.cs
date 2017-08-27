@@ -9,12 +9,19 @@ namespace LittleBlog.BLL.Services
     public interface IArticleService
     {
         void AddArticle(CreateArticleDTO articleDto);
+
         IEnumerable<GetArticleDTO> ShowArticles();
-        IEnumerable<GetArticleDTO> ShowPreviewArticle(int startWith, int count);
+        
+        IEnumerable<GetArticleDTO> ShowPreviewArticle(int startWith, int count, int countOfWords);
+        
         GetArticleDTO GetArticleById(int id);
+        
         void UpdateArticle(GetArticleDTO getArticleDto);
+        
         void DeleteArticle(int id);
+
         IEnumerable<GetArticleDTO> GetArticlesBy(Func<GetArticleDTO, bool> expression);
+        
         IEnumerable<GetArticleDTO> GetArticlesByTags(IEnumerable<TagDTO> tags);
     }
 }

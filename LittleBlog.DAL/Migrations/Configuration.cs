@@ -1,5 +1,9 @@
 namespace LittleBlog.DAL.Migrations
 {
+    using LittleBlog.DAL.Identity;
+    using LittleBlog.Entities.Identity;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -14,17 +18,24 @@ namespace LittleBlog.DAL.Migrations
 
         protected override void Seed(LittleBlog.DAL.Persistence.Context context)
         {
-            //  This method will be called after migrating to the latest version.
+            var userManager = new AppUserManager(new UserStore<AppUser>(context));
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
+            var roleManager = new AppRoleManager(new RoleStore<AppRole>(context));
+
+            roleManager.Create(new AppRole { Name = "User" });
+            roleManager.Create(new AppRole { Name = "Admin" });
+
+            var adminName = "suprmaks@gmail.com";
+            var adminPassword = "123456";
+
+            var user = new AppUser()
+            {
+                UserName = adminName,
+                Email = adminName
+            };
+
+            userManager.Create(user, adminPassword);
+            userManager.AddToRole(user.Id, "Admin");
         }
     }
 }

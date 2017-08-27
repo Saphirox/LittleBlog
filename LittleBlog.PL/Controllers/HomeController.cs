@@ -6,16 +6,19 @@ using System.Web.Mvc;
 
 namespace LittleBlog.PL.Controllers
 {
+    [RoutePrefix("home")]
     public class HomeController : Controller
     {
+        [Route("")]
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("PreviewArticles", "Articles");
         }
 
+        [Route("about")]
         public ActionResult About()
         {
-            return View();
+            return View("About");
         }
     }
 }

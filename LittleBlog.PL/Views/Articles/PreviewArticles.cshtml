@@ -1,7 +1,6 @@
-﻿@model IEnumerable<LittleBlog.ViewModels.Article.ArticleViewModel>
-
+﻿@model IEnumerable<LittleBlog.ViewModels.Article.GetArticleViewModel>
 @{
-    ViewBag.Title = "Articles";
+    ViewBag.Title = Model.Count() + " articles";
     Layout = "../Shared/_Layout.cshtml";
 }
 
@@ -10,28 +9,35 @@
 
     @foreach (var article in Model)
     {
-        <div class="card">
-            <div>
-                @using (Html.BeginForm("DeleteArticle", "Articles", FormMethod.Post))
-                {
-                    @Html.Hidden("id", article.Id)
-                    <button class="btn btn-danger">Delete</button>
-                }
-            </div>
+        <div class="card" style="margin-top: 20px;">
             <div class='card-body'>
-                @article.Header
-                <br/>
-                Time for reading article @article.TimeForRead
-                <br/>
-                @article.Description
+                <h6 class="card-subtitle text-muted">
+                    @article.PublishEditDates.Last().Date
+                </h6>
+                <h2 class="card-title" style='padding:10px 0;'>@article.Header</h2>
+                <h5 class="card-subtitle text-muted" style='padding: 20px 0;'>
+                    Time for reading article @article.TimeForRead
+                </h5>
+
+                <div class="content">
+                    @article.Description ...
+                    @Html.ActionLink("Read more", "GetArticle", new {id = article.Id})
+                </div>
+
                 @foreach (var tag in article.Tags)
                 {
                     <span class="badge badge-dark">@tag.Name</span>
                 }
-            </div>
 
+            </div>
         </div>   
+    }
+    
+    @if (User.IsInRole("Admin"))
+    {
+        @Html.ActionLink("Create article", "CreateArticle", new { count=1, startWith=0, area = "Admin" }, new {@class="card-subtitle text-muted"})
     }
 </div>
 
-@Html.ActionLink("Create article", "CreateArticle", new {count=1, startWith=0})
+
+

@@ -1,8 +1,41 @@
-﻿@model dynamic
+﻿@model LittleBlog.ViewModels.Article.CreateArticleViewModel
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewBag.Title = "Create new article";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>title</h2>
+<h2>Create Article</h2>
+@if (TempData.ContainsKey("status"))
+{
+    <div class="alert alert-success">
+        @TempData["status"]
+    </div>
+}
+
+@using (Html.BeginForm("CreateArticle", "Articles", FormMethod.Post, null))
+{
+    <div class="form-group">
+        @Html.LabelFor(a => a.Header)
+        @Html.TextBoxFor(a => a.Header, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(a => a.TimeForRead)
+        @Html.TextBoxFor(a => a.TimeForRead, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(a => a.Description)
+        @Html.TextAreaFor(a => a.Description, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(a => a.Tags)
+        @Html.TextAreaFor(a => a.Tags, new { @class = "form-control" })
+    </div>
+    
+    @Html.ValidationSummary()
+
+    <button class="btn btn-success" type="submit">Submit</button>
+ }

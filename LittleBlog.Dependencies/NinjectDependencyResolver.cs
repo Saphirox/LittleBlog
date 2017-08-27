@@ -34,11 +34,24 @@ namespace LittleBlog.Dependencies
 
         private void AddBindings()
         {
+            /* Services */
             kernel.Bind<IArticleService>().To<ArticleService>().InRequestScope();
+            kernel.Bind<ICommentService>().To<CommentService>().InRequestScope();
+
+            /* Repositories */
             kernel.Bind<IArticleRepository>().To<ArticleRepository>().InRequestScope();
             kernel.Bind<ICommentRepository>().To<CommentRepository>().InRequestScope();
             kernel.Bind<ITagRepository>().To<TagRepository>().InRequestScope();
+            
+            /* Unit of Works*/
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
+            kernel.Bind<IIdentityUnitOfWork>().To<IdentityUnitOfWork>().InRequestScope();
+
+            /* Managers */
+            kernel.Bind<IAccountManager>().To<AccountManager>().InRequestScope();
+            kernel.Bind<IAccountService>().To<AccountService>().InRequestScope();
+            
+            /* Shared */
             kernel.Bind<Context>().ToSelf().InRequestScope();
             kernel.Bind<IMapper>().ToConstant(MapperBuilder.BuildMapper()).InSingletonScope();
         }

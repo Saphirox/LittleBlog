@@ -14,7 +14,7 @@ namespace LittleBlog.BLL.Services.Implementation
             : base(unitOfWork, mapper)
         {}
 
-        public void CreateCommentByArticleId(CommentDTO comment,int id)
+        public void CreateCommentByArticleId(CommentDTO comment, int id)
         {
             var article = UnitOfWork.ArticleRepository.GetById(id);
             article.Comments.Add(Mapper.Map<CommentDTO, Comment>(comment));

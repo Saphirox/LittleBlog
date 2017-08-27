@@ -20,7 +20,6 @@ namespace LittleBlog.PL
         void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup
-            AreaRegistration.RegisterAllAreas();
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             DependencyResolver.SetResolver(new NinjectDependencyResolver(new StandardKernel()));

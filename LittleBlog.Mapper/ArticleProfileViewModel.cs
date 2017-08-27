@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using LittleBlog.Dtos.Article;
+using LittleBlog.Dtos.Identity;
 using LittleBlog.Entities.Article;
 using LittleBlog.ViewModels.Article;
+using LittleBlog.ViewModels.Identity;
+using LittleBlog.Entities.Identity;
 
 namespace LittleBlog.Mapper
 {
@@ -24,10 +27,15 @@ namespace LittleBlog.Mapper
                         {new PublishEditDateDTO {Date = DateTime.UtcNow}}));
             
             CreateMap<Article, GetArticleDTO>().ReverseMap();
-            CreateMap<ArticleViewModel, GetArticleDTO>().ReverseMap();
+            CreateMap<GetArticleViewModel, GetArticleDTO>().ReverseMap();
 
-            CreateMap<CommentDTO, Comment>().ReverseMap();
-            CreateMap<CommentDTO, CommentViewModel>().ReverseMap();
+            CreateMap<Comment, CommentDTO>();
+            CreateMap<CommentDTO, Comment>()
+                .ForMember(src => src.DateTime, 
+                           opt => opt.MapFrom(
+                           src => DateTime.UtcNow));
+
+            CreateMap<CommentViewModel, CommentDTO>().ReverseMap();
 
             CreateMap<ImageDTO, Image>().ReverseMap();
             CreateMap<ImageDTO, ImageViewModel>().ReverseMap();
@@ -37,6 +45,13 @@ namespace LittleBlog.Mapper
 
             CreateMap<Tag, TagDTO>().ReverseMap();
             CreateMap<TagDTO, TagViewModel>().ReverseMap();
+
+            /* Mappers module */
+            CreateMap<SignInViewModel, AccountDTO>();
+            CreateMap<RegisterViewModel, AccountDTO>();
+            
+            CreateMap<AccountViewModel, AccountDTO>().ReverseMap();
+            CreateMap<Account, AccountDTO>().ReverseMap();
         }
     }
 }

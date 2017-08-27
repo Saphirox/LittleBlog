@@ -1,4 +1,5 @@
-﻿using LittleBlog.DAL.Identity;
+﻿using System.Threading.Tasks;
+using LittleBlog.DAL.Identity;
 using LittleBlog.DAL.Repositories;
 using LittleBlog.Entities.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -19,21 +20,22 @@ namespace LittleBlog.DAL.Persistence
             ArticleRepository = articleRepository;
             TagRepository = tagRepository;
             CommentRepository = commentRepository;
-            
-            UserManager =  new AppUserManager(new UserStore<AppUser>(dbContext));
-            RoleManager = new AppRoleManager(new RoleStore<AppRole>(dbContext));
         }
     
         public IArticleRepository ArticleRepository { get; set; }
         public ITagRepository TagRepository { get; set; }
         public ICommentRepository CommentRepository { get; set; }
-        
-        public AppUserManager UserManager { get; }
-        public AppRoleManager RoleManager { get; }
+        public IAccountManager AccountManager { get; set; }
 
+  
         public int Commit()
         {
             return this.DbContext.SaveChanges();
+        }
+        
+        public async Task<int> CommitAsync()
+        {
+            return await this.DbContext.SaveChangesAsync();
         }
 
         public void Dispose()

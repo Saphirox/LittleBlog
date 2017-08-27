@@ -18,9 +18,11 @@ namespace LittleBlog.BLL.Services.Implementation
         public void AddArticle(CreateArticleDTO articleDto)
         {
             var entity = Mapper.Map<CreateArticleDTO, Article>(articleDto);
-            entity.Tags = this.GetRemainderTags(entity.Tags);
+
+            entity.Tags = GetTags(entity);
 
             UnitOfWork.ArticleRepository.Add(entity);
+            
             UnitOfWork.Commit();
         }
 
@@ -30,12 +32,16 @@ namespace LittleBlog.BLL.Services.Implementation
                 IEnumerable<GetArticleDTO>>(UnitOfWork.ArticleRepository.GetAll());
         }
 
-        public IEnumerable<GetArticleDTO> ShowPreviewArticle(int startWith=0, int count=0)
+        public IEnumerable<GetArticleDTO> ShowPreviewArticle(int startWith=0, int count=0, int countOfWords=100)
         {
             var entities = UnitOfWork.ArticleRepository.GetAll().ToList();
+            
             var dtos = Mapper.Map<IEnumerable<Article>, IEnumerable<GetArticleDTO>>(
                 entities);
-            return dtos.Skip(startWith).Take(count);
+            
+            return dtos.Select(a => {
+                    a.Description = String.Join(" ", a.Description.Split(' ').Take(countOfWords)); return a;
+                }).Skip(startWith).Take(count);
             
         }
 
@@ -49,13 +55,16 @@ namespace LittleBlog.BLL.Services.Implementation
         public void UpdateArticle(GetArticleDTO getArticleDto)
         {
             UnitOfWork.ArticleRepository.Update(Mapper.Map<GetArticleDTO, Article>(getArticleDto));
+            
             UnitOfWork.Commit();
         }
 
         public void DeleteArticle(int id)
         {
             var entity = UnitOfWork.ArticleRepository.GetById(id);
+            
             UnitOfWork.ArticleRepository.Delete(entity);
+            
             UnitOfWork.Commit();
         }
 
@@ -75,14 +84,30 @@ namespace LittleBlog.BLL.Services.Implementation
                     .Where(x => x.Tags.Intersect((ICollection<TagDTO>)tags).Count() == tags.Count());
         }
 
-        #region Helpers
-
-        public ICollection<Tag> GetRemainderTags(ICollection<Tag> source)
+        private ICollection<Tag> GetTags(Article entity)
         {
-            return source.Distinct()
-                         .Except(this.UnitOfWork.TagRepository.GetAll()).ToList();
-        }
+            var listOfTags = new List<Tag>();
+            
+            var dbTags = this.UnitOfWork.TagRepository.GetAll().ToList();
+            
+            var entityTags = entity.Tags;
 
-        #endregion
+            if (!dbTags.Any())
+            {
+                listOfTags.AddRange(entityTags);
+            }
+            else
+            {
+                foreach (var tag in entityTags)
+                {
+                    foreach (var tag1 in dbTags)
+                    {
+                        listOfTags.Add(tag1.Name == tag.Name ? tag1 : tag);
+                    }
+                }
+            }
+            
+            return listOfTags;
+        }
     }
 }
