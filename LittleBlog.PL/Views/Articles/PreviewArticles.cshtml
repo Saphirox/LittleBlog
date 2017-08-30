@@ -1,13 +1,17 @@
-﻿@model IEnumerable<LittleBlog.ViewModels.Article.GetArticleViewModel>
+﻿@model LittleBlog.ViewModels.Article.PreviewArticlesViewModel
 @{
-    ViewBag.Title = Model.Count() + " articles";
+    ViewBag.Title = Model.CountAllArticles + " articles";
     Layout = "../Shared/_Layout.cshtml";
+
+    int startWith = Int32.Parse(Request.QueryString["startWith"]);
+    int count = Int32.Parse(Request.QueryString["count"]);
 }
 
-<div class="container">
+<div class="card">
     <h2>Preview articles</h2>
+    <br />
 
-    @foreach (var article in Model)
+    @foreach (var article in Model.ArticlesViewModels)
     {
         <div class="card" style="margin-top: 20px;">
             <div class='card-body'>
@@ -33,9 +37,21 @@
         </div>   
     }
     
+    <ul class="pagination d-flex card-text justify-content-center">
+        @for (int i =  startWith / count; i < Model.CountAllArticles / count ; i++)
+        {
+            <li class="page-item">
+                @Html.ActionLink((i+1).ToString(),
+                        "PreviewArticles", "Articles", new {startWith = i * count,count = count }, 
+                        new { @class="page-link " + (count + startWith > Model.CountAllArticles ? "disabled" : "" )}) 
+            </li>
+        }
+    </ul>
+    
     @if (User.IsInRole("Admin"))
-    {
-        @Html.ActionLink("Create article", "CreateArticle", new { count=1, startWith=0, area = "Admin" }, new {@class="card-subtitle text-muted"})
+        {
+        @Html.ActionLink("Create article", "CreateArticle", new { area = "Admin" },
+       new { @class = "card-subtitle text-muted btn btn-light" })
     }
 </div>
 

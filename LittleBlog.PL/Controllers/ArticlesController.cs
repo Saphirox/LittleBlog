@@ -26,7 +26,8 @@ namespace LittleBlog.PL.Controllers
             this._articleService = articleService;
             this._commentService = commentService;
         }
-        
+
+
         /// <summary>
         /// Get headers of article and it preview text
         /// </summary>
@@ -40,7 +41,10 @@ namespace LittleBlog.PL.Controllers
             return CreateActionResult(() =>
             {
                 var articlesPreviewDto = this._articleService.ShowPreviewArticle(startWith, count, 20);
-                return View(Mapper.Map<IEnumerable<GetArticleDTO>, IEnumerable<GetArticleViewModel>>(articlesPreviewDto));
+
+                var viewModelsArticles = Mapper.Map<IEnumerable<GetArticleDTO>, IEnumerable<GetArticleViewModel>>(articlesPreviewDto);
+
+                return View(new PreviewArticlesViewModel(viewModelsArticles, this._articleService.CountArticles()));
             });
         }
 

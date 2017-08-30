@@ -52,6 +52,7 @@
     <Compile Include="Article\CommentViewModel.cs" />
     <Compile Include="Article\CreateArticleViewModel.cs" />
     <Compile Include="Article\ImageViewModel.cs" />
+    <Compile Include="Article\PreviewArticlesViewModel.cs" />
     <Compile Include="Article\PublishEditDateViewModel.cs" />
     <Compile Include="Article\TagViewModel.cs" />
     <Compile Include="Identity\AccountViewModel.cs" />

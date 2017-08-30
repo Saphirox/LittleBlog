@@ -11,5 +11,7 @@ namespace LittleBlog.DAL.Repositories
         IEnumerable<Article> GetAll();
         IEnumerable<Article> GetArticlesByTag(IEnumerable<Tag> tags);
         IEnumerable<Article> GetArticleByDateTimes(DateTime start, DateTime end);
+
+        int Count();
     }
 }

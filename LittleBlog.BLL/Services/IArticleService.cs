@@ -20,6 +20,8 @@ namespace LittleBlog.BLL.Services
         
         void DeleteArticle(int id);
 
+        int CountArticles();
+
         IEnumerable<GetArticleDTO> GetArticlesBy(Func<GetArticleDTO, bool> expression);
         
         IEnumerable<GetArticleDTO> GetArticlesByTags(IEnumerable<TagDTO> tags);

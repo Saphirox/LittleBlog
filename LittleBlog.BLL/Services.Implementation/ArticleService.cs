@@ -109,5 +109,7 @@ namespace LittleBlog.BLL.Services.Implementation
             
             return listOfTags;
         }
+
+        public int CountArticles() => UnitOfWork.ArticleRepository.Count();
     }
 }

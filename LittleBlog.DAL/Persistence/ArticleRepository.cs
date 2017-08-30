@@ -46,5 +46,9 @@ namespace LittleBlog.DAL.Persistence
                                 .SingleOrDefault(a => a.Id == id);
         }
 
+        public int Count()
+        {
+            return this.DbContext.Articles.Count();
+        }
     }
 }
