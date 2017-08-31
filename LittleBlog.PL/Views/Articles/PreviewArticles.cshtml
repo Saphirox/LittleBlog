@@ -33,19 +33,29 @@
                     <span class="badge badge-dark">@tag.Name</span>
                 }
 
-            </div>
+            </div>  
         </div>   
     }
     
+    @{ 
+        double iteration = Math.Ceiling(((double)Model.CountAllArticles) / count);
+    }
+
     <ul class="pagination d-flex card-text justify-content-center">
-        @for (int i =  startWith / count; i < Model.CountAllArticles / count ; i++)
+        
+        @for (int i =  0; i < (iteration > 3 ? 3 : iteration - 1 )  ; i++)
         {
             <li class="page-item">
                 @Html.ActionLink((i+1).ToString(),
-                        "PreviewArticles", "Articles", new {startWith = i * count,count = count }, 
-                        new { @class="page-link " + (count + startWith > Model.CountAllArticles ? "disabled" : "" )}) 
+                        "PreviewArticles", "Articles", new { startWith = i * count, count = count }, 
+                        new { @class="page-link" }) 
             </li>
         }
+
+        @Html.ActionLink((iteration).ToString(),
+                        "PreviewArticles", "Articles", new { startWith = iteration, count = count },
+                        new { @class = "page-link" })
+
     </ul>
     
     @if (User.IsInRole("Admin"))

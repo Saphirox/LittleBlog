@@ -9,7 +9,6 @@ namespace LittleBlog.PL.Controllers
     [RoutePrefix("home")]
     public class HomeController : Controller
     {
-        [Route("")]
         public ActionResult Index()
         {
             return RedirectToAction("PreviewArticles", "Articles");
