@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArticleProfileDTO.cs" />
     <Compile Include="ArticleProfileViewModel.cs" />
     <Compile Include="MapperBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

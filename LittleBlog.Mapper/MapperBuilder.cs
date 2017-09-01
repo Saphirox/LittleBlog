@@ -14,7 +14,7 @@ namespace LittleBlog.Mapper
             var config = new MapperConfiguration((cfg) =>
             {
                 cfg.AddProfile(new ArticleProfileDTO());
-                cfg.AddProfile(new ArticleProfileViewModel());
+                cfg.AddProfile(new ArticleProfile());
             });
 
             //config.AssertConfigurationIsValid();

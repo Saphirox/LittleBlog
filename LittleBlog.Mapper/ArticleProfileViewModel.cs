@@ -12,9 +12,9 @@ using LittleBlog.Entities.Identity;
 
 namespace LittleBlog.Mapper
 {
-    public class ArticleProfileViewModel : Profile
+    public class ArticleProfile : Profile
     {
-        public ArticleProfileViewModel()
+        public ArticleProfile()
         {
             CreateMap<CreateArticleViewModel, CreateArticleDTO>()
                 .ForMember(src => src.Tags, 

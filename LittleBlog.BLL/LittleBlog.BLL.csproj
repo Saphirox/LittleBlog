@@ -91,7 +91,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infrastructure\Result.cs" />
     <Compile Include="Services.Implementation\AccountService.cs" />
     <Compile Include="Services.Implementation\ArticleService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
