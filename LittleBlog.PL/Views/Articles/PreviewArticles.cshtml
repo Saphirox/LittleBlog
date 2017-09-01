@@ -3,17 +3,19 @@
     ViewBag.Title = Model.CountAllArticles + " articles";
     Layout = "../Shared/_Layout.cshtml";
 
-    int startWith = Int32.Parse(Request.QueryString["startWith"]);
-    int count = Int32.Parse(Request.QueryString["count"]);
+    int startWith = int.Parse(Request.QueryString["startWith"] ?? "0");
+    int count = int.Parse(Request.QueryString["count"] ?? "0");
+
+    double iteration = 
+        Math.Ceiling(((double)Model.CountAllArticles) / count);
 }
 
 <div class="card">
     <h2>Preview articles</h2>
     <br />
-
     @foreach (var article in Model.ArticlesViewModels)
     {
-        <div class="card" style="margin-top: 20px;">
+        <div class="card card-body" style="margin-top: 20px;">
             <div class='card-body'>
                 <h6 class="card-subtitle text-muted">
                     @article.PublishEditDates.Last().Date
@@ -36,11 +38,6 @@
             </div>  
         </div>   
     }
-    
-    @{ 
-        double iteration = Math.Ceiling(((double)Model.CountAllArticles) / count);
-    }
-
     <ul class="pagination d-flex card-text justify-content-center">
         
         @for (int i =  0; i < (iteration > 3 ? 3 : iteration - 1 )  ; i++)
