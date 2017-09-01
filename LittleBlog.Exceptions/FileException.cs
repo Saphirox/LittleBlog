@@ -12,7 +12,7 @@ namespace LittleBlog.Exceptions
         {
         }
 
-        public static FileException UnpropriateFileExtenstion(string name)
+        public static FileException UnpropriateFileExtension(string name)
         {
             return new FileException($"Unpropriate file extenstion {name}");
         }

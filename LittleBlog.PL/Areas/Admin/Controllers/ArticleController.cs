@@ -120,7 +120,7 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
     
                    if (!ext.Contains(fileExt))
                    {
-                       throw FileException.UnpropriateFileExtenstion(fileExt);
+                       throw FileException.UnpropriateFileExtension(fileExt);
                    }
 
                    images.AddLast(new ImageDTO() { ImageUrl = Path.GetFileName(file.FileName) });
