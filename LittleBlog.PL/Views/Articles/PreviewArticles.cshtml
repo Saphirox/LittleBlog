@@ -11,11 +11,11 @@
 }
 
 <div class="card">
-    <h2>Preview articles</h2>
+    <h2 class="card-header">Preview articles</h2>
     <br />
     @foreach (var article in Model.ArticlesViewModels)
     {
-        <div class="card card-body" style="margin-top: 20px;">
+        <div class="card card-body" style="margin: 20px 20px 0 20px;">
             <div class='card-body'>
                 <h6 class="card-subtitle text-muted">
                     @article.PublishEditDates.Last().Date

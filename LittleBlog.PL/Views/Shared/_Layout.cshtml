@@ -9,8 +9,26 @@
     <style>
         main {
             margin: auto;
-            width: 65%;
         }
+
+       @@media screen and (min-width: 576px) {
+        main {
+            width: 80%;
+        }
+       }
+
+        @@media screen and (min-width: 768px) {
+            main {
+                width: 70%;
+            }
+        }
+
+        @@media (min-width: 992px) {
+           main {
+                width: 65%;
+            }
+        }
+
     </style>    
     @RenderSection("Styles", false)
 </head>
@@ -18,11 +36,11 @@
 <main>
     <div class="container" style="margin-top: 20px; padding: 20px;">
         <div class="row">
-            <div class="col-md-6 col-sm-6 col-12">
+            <div class="col-md-6 col-sm-12 col-12">
                 <h2>Maxym Suprunenko</h2>
                 <p>Inspired entrepenuer, student</p>
             </div>
-            <div class="col-md-6 col-sm-6 col-12 d-flex justify-content-end">
+            <div class="col-md-6 col-sm-12 col-12 d-flex justify-content-end">
                 
                 @Html.ActionLink("Articles", "PreviewArticles", "Articles", new {startWith = 0, count = 10},
                     new {@class = "nav-link"})
