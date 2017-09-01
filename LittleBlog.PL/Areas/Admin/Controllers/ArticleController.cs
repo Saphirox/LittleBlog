@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure.Interception;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using AutoMapper;
 using LittleBlog.BLL.Services;
 using LittleBlog.Dtos.Article;
+using LittleBlog.Exceptions;
 using LittleBlog.PL.Controllers;
 using LittleBlog.ViewModels.Article;
 
@@ -29,24 +34,6 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
             this._commentService = commentService;
         }
 
-        [Route("index")]
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        [Route("get-all")]
-        public ActionResult PreviewArticles(int count = 0, 
-                                            int startWith = 0)
-        {
-            return CreateActionResult(() =>
-            {
-                var articlesPreviewDto = this._articleService.ShowPreviewArticle(startWith, count, 20);
-                return View(Mapper.Map<IEnumerable<GetArticleDTO>, IEnumerable<GetArticleViewModel>>(articlesPreviewDto));
-            }); 
-        }
-
         [HttpGet]
         [Route("create")]
         public ActionResult CreateArticle()
@@ -56,7 +43,7 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
 
         [HttpPost]
         [Route("create")]
-        public ActionResult CreateArticle(CreateArticleViewModel model)
+        public ActionResult CreateArticle(CreateArticleViewModel model, IEnumerable<HttpPostedFileBase> file)
         {
 
             if (!ModelState.IsValid)
@@ -67,16 +54,20 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
 
             return CreateActionResult(() =>
             {
-                this._articleService.AddArticle(
-                    Mapper.Map<CreateArticleViewModel, CreateArticleDTO>(model));
+                var article =  Mapper.Map<CreateArticleViewModel, CreateArticleDTO>(model);
 
+                article.Images = GetImagesNameAndSaveOnServer(file);
+                
+                this._articleService.AddArticle(article);
+                
                 TempData["status"] = "Success";
+                
                 return View();
             });
         }
 
         [HttpPost]
-        [Route("create/update")]
+        [Route("update")]
         public ActionResult UpdateArticle(GetArticleViewModel model)
         {
             return CreateActionResult(() =>
@@ -84,7 +75,7 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
                 this._articleService.UpdateArticle(
                     Mapper.Map<GetArticleViewModel, GetArticleDTO>(model));
 
-                return RedirectToAction("Index");
+                return RedirectToAction("PreviewArticles", "Articles");
             });
         }
 
@@ -99,29 +90,53 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
             });
         }
 
-        [HttpGet]
-        [Route("{id:int}")]
-        public ActionResult GetArticle(int id)
+        [Route("file/{name}")]
+        public ActionResult GetFileByName(string name)
         {
             return CreateActionResult(() =>
             {
-                return View(Mapper.Map<GetArticleDTO, GetArticleViewModel>
-                    (this._articleService.GetArticleById(id)));
+                ImageDTO fileName = this._articleService.GetFileByName(name);
+
+                string fileExt = Path.GetExtension(fileName.ImageUrl)?.Remove(0, 1);
+                
+                string contentType = "image/" + (fileExt == "jpg" ? "jpeg" : fileExt);
+                
+                byte[] image = 
+                    System.IO.File.ReadAllBytes(Path.Combine(Server.MapPath("~"), fileName.ImageUrl));
+                
+                return base.File(image, contentType);
             });
         }
 
-        [HttpPost]
-        public ActionResult CreateCommentAjax([Bind(Exclude = "Id,DateTime")]CommentViewModel model, int articleId)
+        #region Helpers
+
+        public ICollection<ImageDTO> GetImagesNameAndSaveOnServer(IEnumerable<HttpPostedFileBase> files)
         {
-            return CreateActionResult(() =>
+            if (files != null)
             {
+                string[] ext = {".jpg", ".jpeg", ".png", ".gif"};
+                
+                LinkedList<ImageDTO> images = new LinkedList<ImageDTO>();
+                
+                foreach (var file in files)
+                {
+                   var fileExt = Path.GetExtension(file.FileName);
+    
+                   if (!ext.Contains(fileExt))
+                   {
+                       throw FileException.UnpropriateFileExtenstion(fileExt);
+                   }
 
-                var dto = Mapper.Map<CommentViewModel, CommentDTO>(model);
-                this._commentService.CreateCommentByArticleId(dto, articleId);
-
-                return View("GetArticle", (Mapper.Map<GetArticleDTO, GetArticleViewModel>
-                    (this._articleService.GetArticleById(articleId))));
-            });
+                   images.AddLast(new ImageDTO() { ImageUrl = Path.GetFileName(file.FileName) });
+                   file.SaveAs(Path.Combine(Server.MapPath(@"~/App_Data"), file.FileName));                
+                }
+                
+                return images;
+            }
+            
+            return null;
         }
+
+        #endregion
     }
 }

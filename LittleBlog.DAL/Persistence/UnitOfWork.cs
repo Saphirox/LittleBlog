@@ -37,10 +37,5 @@ namespace LittleBlog.DAL.Persistence
         {
             return await this.DbContext.SaveChangesAsync();
         }
-
-        public void Dispose()
-        {
-            DbContext.Dispose();
-        }
     }
 }

@@ -25,5 +25,7 @@ namespace LittleBlog.BLL.Services
         IEnumerable<GetArticleDTO> GetArticlesBy(Func<GetArticleDTO, bool> expression);
         
         IEnumerable<GetArticleDTO> GetArticlesByTags(IEnumerable<TagDTO> tags);
+        
+        ImageDTO GetFileByName(string name);
     }
 }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
 using LittleBlog.DAL.Repositories;
 using LittleBlog.Dtos.Article;
 using LittleBlog.Entities.Article;
+using LittleBlog.Exceptions;
 
 namespace LittleBlog.BLL.Services.Implementation
 {
@@ -81,8 +83,26 @@ namespace LittleBlog.BLL.Services.Implementation
             return
                 Mapper.Map<IEnumerable<Article>, IEnumerable<GetArticleDTO>>(
                     UnitOfWork.ArticleRepository.GetAll())
-                    .Where(x => x.Tags.Intersect((ICollection<TagDTO>)tags).Count() == tags.Count());
+                        .Where(x => x.Tags.Intersect((ICollection<TagDTO>)tags).Count() == tags.Count());
         }
+
+        public ImageDTO GetFileByName(string name)
+        {
+            string[] ext = {".jpg", ".jpeg", ".png", ".gif"};
+
+            ImageDTO image = Mapper.Map<Image, ImageDTO>(
+                UnitOfWork.ArticleRepository.GetAll()
+                    .SelectMany(a => a.Images).FirstOrDefault(i => 
+                        Path.GetFileNameWithoutExtension(i.ImageUrl) == name)
+            );
+            
+            if (image == null)
+            {
+                throw FileException.FileNameNotExists(name);
+            }
+
+            return image;
+        } 
 
         private ICollection<Tag> GetTags(Article entity)
         {

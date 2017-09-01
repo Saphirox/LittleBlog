@@ -26,5 +26,11 @@ namespace LittleBlog.Exceptions
         {
             return new FileException($"File is not exits in path {path}");
         }
+
+        public static FileException FileNameNotExists(string name)
+        {
+            return new FileException($"File name { name } is not exits");
+
+        }
     }
 }

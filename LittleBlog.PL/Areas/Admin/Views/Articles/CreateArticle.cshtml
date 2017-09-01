@@ -13,7 +13,7 @@
     </div>
 }
 
-@using (Html.BeginForm("CreateArticle", "Articles", FormMethod.Post, null))
+@using (Html.BeginForm("CreateArticle", "Articles", FormMethod.Post,  new { enctype = "multipart/form-data" }))
 {
     <div class="form-group">
         @Html.LabelFor(a => a.Header)
@@ -37,5 +37,8 @@
     
     @Html.ValidationSummary()
 
+    <label for="files">Enter file, you will get url to img like [yoursblog.com/articles/file/[some]</label>
+    <input id="files" type="file" name="file" multiple />
+    
     <button class="btn btn-success" type="submit">Submit</button>
  }

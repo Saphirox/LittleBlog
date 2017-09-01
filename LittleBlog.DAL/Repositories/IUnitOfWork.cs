@@ -4,7 +4,7 @@ using LittleBlog.DAL.Identity;
 
 namespace LittleBlog.DAL.Repositories
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork
     {
         IArticleRepository ArticleRepository { get; set; }
         ITagRepository TagRepository { get; set; }
