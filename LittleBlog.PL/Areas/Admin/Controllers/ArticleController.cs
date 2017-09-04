@@ -19,15 +19,18 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
     {
         private readonly IArticleService _articleService;
         private readonly ICommentService _commentService;
+        private readonly IFileService _fileService;
 
         public ArticlesController(
             IArticleService articleService,
             IAccountService accountService,
             ICommentService commentService,
-            IMapper mapper) : base(accountService, mapper)
+            IMapper mapper, 
+            IFileService fileService) : base(accountService, mapper)
         {
             this._articleService = articleService;
             this._commentService = commentService;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -91,7 +94,7 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
         {
             return CreateActionResult(() =>
             {
-                ImageDTO fileName = this._articleService.GetFileByName(name);
+                ImageDTO fileName = this._fileService.GetFileByName(name);
 
                 string fileExt = Path.GetExtension(fileName.ImageUrl)?.Remove(0, 1);
                 

@@ -1,7 +1,34 @@
-﻿namespace LittleBlog.BLL.Services.Implementation
+﻿using System.IO;
+using System.Linq;
+using AutoMapper;
+using LittleBlog.DAL.Persistence;
+using LittleBlog.DAL.Repositories;
+using LittleBlog.DAL.UnitOfWorks;
+using LittleBlog.Dtos.Article;
+using LittleBlog.Entities.Article;
+using LittleBlog.Exceptions;
+
+namespace LittleBlog.BLL.Services.Implementation
 {
-    public class FileService
+    public class FileService : Service<IArticleUnitOfWork>, IFileService
     {
+        public FileService(IArticleUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        {}
         
+        public ImageDTO GetFileByName(string name)
+        {
+            string[] ext = {".jpg", ".jpeg", ".png", ".gif"};
+
+            ImageDTO image = Mapper.Map<Image, ImageDTO>(
+                UnitOfWork.ArticleRepository.GetAll()
+                    .SelectMany(a => a.Images).FirstOrDefault(i => 
+                        Path.GetFileNameWithoutExtension(i.ImageUrl) == name)
+            );
+            
+            if (image == null)
+                throw FileException.FileNameNotExists(name);
+
+            return image;
+        }
     }
 }

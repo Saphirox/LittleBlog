@@ -1,19 +1,18 @@
 ﻿using System.Linq;
 using AutoMapper;
 using LittleBlog.DAL.Repositories;
+using LittleBlog.DAL.UnitOfWorks;
 using LittleBlog.Dtos.Article;
 using LittleBlog.Entities.Article;
 
 namespace LittleBlog.BLL.Services.Implementation
 {
-    public class CommentService : Service, ICommentService
+    public class CommentService : Service<IArticleUnitOfWork>, ICommentService
     {
-        public CommentService(
-            IUnitOfWork unitOfWork, 
-            IMapper mapper) 
-            : base(unitOfWork, mapper)
-        {}
-
+        public CommentService(IArticleUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        {
+        }
+        
         public void CreateCommentByArticleId(CommentDTO comment, int id)
         {
             var article = UnitOfWork.ArticleRepository.GetById(id);

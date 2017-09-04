@@ -10,7 +10,6 @@ namespace LittleBlog.Dependencies.DLL
         {
             this.Bind<IArticleRepository>().To<ArticleRepository>();
             this.Bind<ITagRepository>().To<TagRepository>();
-            this.Bind<ICommentRepository>().To<CommentRepository>();
         }
     }
 }

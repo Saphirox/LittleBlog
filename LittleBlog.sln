@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LittleBlog.Dependencies", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LittleBlog.Exceptions", "LittleBlog.Exceptions\LittleBlog.Exceptions.csproj", "{2688BE71-49D2-48E4-8BEF-F3F5AB8AD2DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LittleBlog.Tests", "LittleBlog.Tests\LittleBlog.Tests.csproj", "{AE8B53AC-5A68-4BF0-9635-C1DB2D48FC1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{2688BE71-49D2-48E4-8BEF-F3F5AB8AD2DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2688BE71-49D2-48E4-8BEF-F3F5AB8AD2DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2688BE71-49D2-48E4-8BEF-F3F5AB8AD2DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE8B53AC-5A68-4BF0-9635-C1DB2D48FC1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE8B53AC-5A68-4BF0-9635-C1DB2D48FC1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE8B53AC-5A68-4BF0-9635-C1DB2D48FC1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE8B53AC-5A68-4BF0-9635-C1DB2D48FC1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

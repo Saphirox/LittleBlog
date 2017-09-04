@@ -1,6 +1,6 @@
 ﻿namespace LittleBlog.BLL.Services
 {
-    public interface ICountService 
+    public interface ICounterService 
     {
         int CountArticles();
     }

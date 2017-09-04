@@ -8,15 +8,9 @@ using LittleBlog.Dtos.Identity;
 
 namespace LittleBlog.BLL.Services
 {
-    public interface IAccountService
+    public interface IAccountService : IAuthenticateService
     {
         void Create(AccountDTO accountDto);
-        
-        Task<ClaimsIdentity> Authenticate(AccountDTO account);
-        
-        Task SetInitialUser(AccountDTO account, List<string> roles);
-        
-        AccountDTO GetUserAccountById(Guid id);
         
         AccountDTO GetUserByName(string userName);
     }

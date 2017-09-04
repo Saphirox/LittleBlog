@@ -4,16 +4,20 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
+using LittleBlog.BLL.Infrastructure;
+using LittleBlog.DAL.Persistence;
+using LittleBlog.DAL.Persistence.UnitsOfWork;
 using LittleBlog.DAL.Repositories;
+using LittleBlog.DAL.UnitOfWorks;
 using LittleBlog.Dtos.Article;
 using LittleBlog.Entities.Article;
 using LittleBlog.Exceptions;
 
 namespace LittleBlog.BLL.Services.Implementation
 {
-    public class ArticleService : Service, IArticleService
+    public class ArticleService : Service<IArticleUnitOfWork>, IArticleService
     {
-        public ArticleService(IUnitOfWork unitOfWork, IMapper mapper)
+        public ArticleService(IArticleUnitOfWork unitOfWork, IMapper mapper)
            : base (unitOfWork, mapper)
         {}
 
@@ -21,28 +25,29 @@ namespace LittleBlog.BLL.Services.Implementation
         {
             var entity = Mapper.Map<CreateArticleDTO, Article>(articleDto);
 
-            entity.Tags = GetTags(entity);
+            var tagUtil = new TagUtil(UnitOfWork.TagRepository);
+            
+            entity.Tags = tagUtil.GetTags(entity);
 
             UnitOfWork.ArticleRepository.Add(entity);
             
             UnitOfWork.Commit();
         }
 
-        public IEnumerable<GetArticleDTO> ShowArticles()
+        public IEnumerable<GetArticleDTO> GetPreviewArticles(int startWith=0, int count=0, int countOfWords=0)
         {
-            return Mapper.Map<IEnumerable<Article>, 
-                IEnumerable<GetArticleDTO>>(UnitOfWork.ArticleRepository.GetAll());
-        }
-
-        public IEnumerable<GetArticleDTO> ShowPreviewArticle(int startWith=0, int count=0, int countOfWords=100)
-        {
-            var entities = UnitOfWork.ArticleRepository.GetAll().ToList();
+            if (count == 0)
+            {
+                return Array.Empty<GetArticleDTO>();
+            }
+            
+            var entities = UnitOfWork.ArticleRepository.GetAll();
             
             var dtos = Mapper.Map<IEnumerable<Article>, IEnumerable<GetArticleDTO>>(
                 entities);
             
             return dtos.Select(a => {
-                    a.Description = String.Join(" ", a.Description.Split(' ').Take(countOfWords)); return a;
+                    a.Description = string.Join(" ", a.Description.Split(' ').Take(countOfWords)); return a;
                 }).Skip(startWith).Take(count);
             
         }
@@ -70,66 +75,15 @@ namespace LittleBlog.BLL.Services.Implementation
             UnitOfWork.Commit();
         }
 
-        public IEnumerable<GetArticleDTO> GetArticlesBy(Func<GetArticleDTO, bool> expression)
+        public IEnumerable<GetArticleDTO> GetArticlesByTags(IEnumerable<TagDTO> dtoTags)
         {
-            return
-                Mapper.Map<IEnumerable<Article>, IEnumerable<GetArticleDTO>>(
-                    UnitOfWork.ArticleRepository.GetAll()
-                ).Where(expression);
-        }
-
-        public IEnumerable<GetArticleDTO> GetArticlesByTags(IEnumerable<TagDTO> tags)
-        {
-            return
-                Mapper.Map<IEnumerable<Article>, IEnumerable<GetArticleDTO>>(
-                    UnitOfWork.ArticleRepository.GetAll())
-                        .Where(x => x.Tags.Intersect((ICollection<TagDTO>)tags).Count() == tags.Count());
-        }
-
-        public ImageDTO GetFileByName(string name)
-        {
-            string[] ext = {".jpg", ".jpeg", ".png", ".gif"};
-
-            ImageDTO image = Mapper.Map<Image, ImageDTO>(
+            var tags = Mapper.Map<IEnumerable<TagDTO>, IEnumerable<Tag>>(dtoTags);
+            
+            return Mapper.Map<IEnumerable<Article>, IEnumerable<GetArticleDTO>>(
                 UnitOfWork.ArticleRepository.GetAll()
-                    .SelectMany(a => a.Images).FirstOrDefault(i => 
-                        Path.GetFileNameWithoutExtension(i.ImageUrl) == name)
-            );
-            
-            if (image == null)
-            {
-                throw FileException.FileNameNotExists(name);
-            }
-
-            return image;
-        } 
-
-        private ICollection<Tag> GetTags(Article entity)
-        {
-            var listOfTags = new List<Tag>();
-            
-            var dbTags = this.UnitOfWork.TagRepository.GetAll().ToList();
-            
-            var entityTags = entity.Tags;
-
-            if (!dbTags.Any())
-            {
-                listOfTags.AddRange(entityTags);
-            }
-            else
-            {
-                foreach (var tag in entityTags)
-                {
-                    foreach (var tag1 in dbTags)
-                    {
-                        listOfTags.Add(tag1.Name == tag.Name ? tag1 : tag);
-                    }
-                }
-            }
-            
-            return listOfTags;
+                    .Where(a => a.Tags.Any(s => tags.Contains(s))));
         }
 
-        public int CountArticles() => UnitOfWork.ArticleRepository.Count();
+        public int CountArticles() => UnitOfWork.ArticleRepository.GetAll().Count();
     }
 }

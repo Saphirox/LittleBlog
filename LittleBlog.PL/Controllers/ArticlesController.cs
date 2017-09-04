@@ -40,7 +40,7 @@ namespace LittleBlog.PL.Controllers
         {
             return CreateActionResult(() =>
             {
-                var articlesPreviewDto = this._articleService.ShowPreviewArticle(startWith, count, 20);
+                var articlesPreviewDto = this._articleService.GetPreviewArticles(startWith, count, 20);
 
                 var viewModelsArticles = Mapper.Map<IEnumerable<GetArticleDTO>, IEnumerable<GetArticleViewModel>>(articlesPreviewDto);
 

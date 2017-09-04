@@ -6,13 +6,9 @@ using LittleBlog.Dtos.Article;
 
 namespace LittleBlog.BLL.Services
 {
-    public interface IArticleService
+    public interface IArticleService : ICounterService, IPreviewArticleService
     {
         void AddArticle(CreateArticleDTO articleDto);
-
-        IEnumerable<GetArticleDTO> ShowArticles();
-        
-        IEnumerable<GetArticleDTO> ShowPreviewArticle(int startWith, int count, int countOfWords);
         
         GetArticleDTO GetArticleById(int id);
         
@@ -20,12 +16,6 @@ namespace LittleBlog.BLL.Services
         
         void DeleteArticle(int id);
 
-        int CountArticles();
-
-        IEnumerable<GetArticleDTO> GetArticlesBy(Func<GetArticleDTO, bool> expression);
-        
         IEnumerable<GetArticleDTO> GetArticlesByTags(IEnumerable<TagDTO> tags);
-        
-        ImageDTO GetFileByName(string name);
     }
 }

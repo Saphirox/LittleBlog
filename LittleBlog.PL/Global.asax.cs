@@ -9,6 +9,7 @@ using System.Web.SessionState;
 using System.Web.Http;
 using System.Web.Optimization;
 using LittleBlog.Dependencies;
+using LittleBlog.Dependencies.DLL;
 using LittleBlog.Mapper;
 using LittleBlog.PL.App_Start;
 using Ninject;
