@@ -18,13 +18,21 @@ namespace LittleBlog.PL.Controllers
     {
         protected readonly IAccountService AccountService;
         protected readonly IMapper Mapper;
+        protected readonly IAuthenticateService AuthenticateService;
 
-        public BaseController() {}
+        public BaseController(IAuthenticateService authenticateService)
+        {
+            AuthenticateService = authenticateService;
+        }
 
-        public BaseController(IAccountService accountService, IMapper mapper)
+        public BaseController(
+            IAccountService accountService, 
+            IMapper mapper, 
+            IAuthenticateService authenticateService)
         {
             AccountService = accountService;
             Mapper = mapper;
+            AuthenticateService = authenticateService;
         }
         
         /// <summary>
@@ -41,7 +49,7 @@ namespace LittleBlog.PL.Controllers
         }
         
         /// <summary>
-        ///  ThrowIf pattern usign for catching all errors
+        ///  ThrowIf pattern using for catching all errors
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

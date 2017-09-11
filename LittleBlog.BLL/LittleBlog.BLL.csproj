@@ -95,6 +95,7 @@
     <Compile Include="Services.Implementation\AccountService.cs" />
     <Compile Include="Services.Implementation\ArticleService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services.Implementation\AuthenticateService.cs" />
     <Compile Include="Services.Implementation\CommentService.cs" />
     <Compile Include="Services.Implementation\FileService.cs" />
     <Compile Include="Services.Implementation\Service.cs" />

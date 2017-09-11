@@ -8,7 +8,7 @@ using LittleBlog.Dtos.Identity;
 
 namespace LittleBlog.BLL.Services
 {
-    public interface IAccountService : IAuthenticateService
+    public interface IAccountService
     {
         void Create(AccountDTO accountDto);
         

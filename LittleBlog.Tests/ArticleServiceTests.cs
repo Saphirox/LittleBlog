@@ -25,7 +25,7 @@ namespace LittleBlog.Tests
         private IMapper _mapper;
         private Mock<ITagRepository> _mockTagRepository;
 
-        private static readonly Article article = new Article()
+        private static readonly Article FakeArticle = new Article()
         {
             Description = "Lorem ipsum else some count",
             Header = "Lorem",
@@ -48,12 +48,12 @@ namespace LittleBlog.Tests
 
             _fakeArticleUnitOfWork = new Mock<IArticleUnitOfWork>();
 
-            article.PublishEditDates = new List<PublishEditDate>()
+            FakeArticle.PublishEditDates = new List<PublishEditDate>()
             {
-                new PublishEditDate() { Article = article, Id = 1, Date = DateTime.UtcNow }
+                new PublishEditDate() { Article = FakeArticle, Id = 1, Date = DateTime.UtcNow }
             };
             
-            article.Tags = new List<Tag>()
+            FakeArticle.Tags = new List<Tag>()
             {
                 new Tag() { Name = "Hello" }
             };
@@ -61,39 +61,39 @@ namespace LittleBlog.Tests
         }
 
         [Test]
-        public void CounterTest()
+        public void Counter_Test()
         {
-            _fakeArticleRepository.Setup(s => s.GetAll()).Returns(new[] {article});
+            _fakeArticleRepository.Setup(s => s.GetAll()).Returns(new[] {FakeArticle});
 
             Assert.AreEqual(_articleService.CountArticles(), 1);
         }
         
         [Test]
-        public void FindingByIdTest()
+        public void FindingById_Test()
         {
-            _fakeArticleRepository.Setup(s => s.GetById(It.IsAny<int>())).Returns( article );
+            _fakeArticleRepository.Setup(s => s.GetById(It.IsAny<int>())).Returns( FakeArticle );
 
             var result = _articleService.GetArticleById(1);
              
             Assert.NotNull(result);
-            Assert.AreEqual(article.Id, result.Id);
+            Assert.AreEqual(FakeArticle.Id, result.Id);
         }
 
         [Test]
-        public void GetArticlesByTagsTest()
+        public void GetArticlesByTags_Test()
         {
-            _fakeArticleRepository.Setup(s => s.GetAll()).Returns(new[] {article});
+            _fakeArticleRepository.Setup(s => s.GetAll()).Returns(new[] {FakeArticle});
             
             var l = _articleService.GetArticlesByTags(new[] {new TagDTO() {Name = "Hello"}}).First();
             
             Assert.NotNull(l);
-            Assert.AreEqual(l.Header, article.Header);
+            Assert.AreEqual(l.Header, FakeArticle.Header);
         }
 
         [Test]
-        public void GetPreviewArticlesOneArticleTest()
+        public void GetPreviewArticlesOneArticle_Test()
         {
-            _fakeArticleRepository.Setup(s => s.GetAll()).Returns(new[] {article});
+            _fakeArticleRepository.Setup(s => s.GetAll()).Returns(new[] {FakeArticle});
 
             const int count = 1;
             const int startWith = 0;
@@ -101,14 +101,14 @@ namespace LittleBlog.Tests
             
             var l = _articleService.GetPreviewArticles(startWith, count, words).First();
             
-            Assert.AreEqual(l.Header, article.Header);
+            Assert.AreEqual(l.Header, FakeArticle.Header);
             Assert.AreEqual(l.Description, "Lorem ipsum else");
         }
         
         [Test]
-        public void GetPreviewArticlesNoArticleTest()
+        public void GetPreviewArticlesNoArticle_Test()
         {
-            _fakeArticleRepository.Setup(s => s.GetAll()).Returns(new[] {article});
+            _fakeArticleRepository.Setup(s => s.GetAll()).Returns(new[] {FakeArticle});
 
             const int count = 0;
             const int startWith = 0;
@@ -121,7 +121,7 @@ namespace LittleBlog.Tests
         }
 
         [Test]
-        public void AddArticleTest()
+        public void AddArticle_Test()
         {
             this._articleService = new ArticleService(_fakeArticleUnitOfWork.Object, _mapper);
             
@@ -153,7 +153,7 @@ namespace LittleBlog.Tests
         }
 
         [Test]
-        public void AddArticleIfTagsExistsTest()
+        public void AddArticleIfTagsExists_Test()
         {
             var dbArticles = new List<Article>();
             var dbTags = new List<Tag>();
@@ -194,7 +194,7 @@ namespace LittleBlog.Tests
         }
 
         [Test]
-        public void UpdateArticleTest()
+        public void UpdateArticle_Test()
         {
             var dbArticles = new List<Article>();
             
@@ -233,7 +233,7 @@ namespace LittleBlog.Tests
         }
 
         [Test]
-        public void DeleteArticleTest()
+        public void DeleteArticle_Test()
         {
             var dbArticles = new List<Article>();
             

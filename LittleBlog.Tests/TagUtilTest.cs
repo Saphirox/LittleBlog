@@ -47,7 +47,7 @@ namespace LittleBlog.Tests
         }
         
         [Test]
-        public void GetTagsIfDbTagsNotExitsTest()
+        public void GetTagsIfDbTagsNotExits_Test()
         {
             var articlesTags = _tagUtil.GetTags(article);
             
@@ -55,7 +55,7 @@ namespace LittleBlog.Tests
         }
         
         [Test]
-        public void GetTagsIfDbTagExitsTest()
+        public void GetTagsIfDbTagExits_Test()
         {
             var temp = new Tag() {Id = 2, Name = "Hello2"};
             _fakeDbTags.Add(temp);

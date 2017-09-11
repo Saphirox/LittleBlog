@@ -17,7 +17,9 @@ namespace LittleBlog.PL.Controllers
     {
         public AccountController(
             IAccountService accountService,
-            IMapper mapper) : base(accountService, mapper)
+            IMapper mapper,
+            IAuthenticateService authenticateService) 
+            : base(accountService, mapper, authenticateService)
         {}
         
         [HttpGet]
@@ -62,7 +64,7 @@ namespace LittleBlog.PL.Controllers
                 
                 try
                 {
-                    claims = await AccountService.Authenticate(dtoAccount);
+                    claims = await AuthenticateService.Authenticate(dtoAccount);
                 }
                 catch (IdentityException e)
                 {
@@ -98,7 +100,7 @@ namespace LittleBlog.PL.Controllers
                 
                 AccountService.Create(dtoAccount);
                 
-                var claims = await AccountService.Authenticate(dtoAccount);
+                var claims = await AuthenticateService.Authenticate(dtoAccount);
 
                 SignIn(claims);
                 
@@ -133,6 +135,7 @@ namespace LittleBlog.PL.Controllers
            
                return returnUrl;
          }
+        
          #endregion
      }
  }

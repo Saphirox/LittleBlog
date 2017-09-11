@@ -30,7 +30,7 @@ namespace LittleBlog.Tests
         };
         
         [SetUp]
-        public void Setup()
+        public void SetUp()
         {
             _mock = new Mock<IArticleRepository>();
             _articleUnitOfWork = new ArticleUnitOfWork(null, _mock.Object, null);
@@ -39,7 +39,7 @@ namespace LittleBlog.Tests
         }
         
         [Test]
-        public void GetFileByNameTest()
+        public void GetFileByName_Test()
         {
             _mock.Setup(setup => setup.GetAll()).Returns(new[] {article});
             Assert.AreEqual("file.jpg", _fileService.GetFileByName("file").ImageUrl);

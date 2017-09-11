@@ -20,8 +20,9 @@ namespace LittleBlog.PL.Controllers
         public ArticlesController(
             IArticleService articleService, 
             IAccountService accountService, 
+            IAuthenticateService authenticateService, 
             ICommentService commentService,
-            IMapper mapper) : base(accountService, mapper)
+            IMapper mapper) : base(accountService, mapper, authenticateService)
         {
             this._articleService = articleService;
             this._commentService = commentService;

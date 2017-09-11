@@ -17,8 +17,7 @@ namespace LittleBlog.BLL.Services.Implementation
     public class AccountService : Service<IIdentityUnitOfWork>, IAccountService
     {
         public AccountService(IIdentityUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
-        {
-        }
+        {}
         
         public async void Create(AccountDTO accountDto)
         {
@@ -49,22 +48,6 @@ namespace LittleBlog.BLL.Services.Implementation
 
             if (!roleResult.Succeeded)
                 throw IdentityException.AddToRoleUserFailure(accountDto.Email, accountDto.RoleName);
-            
-        }
-
-        public async Task<ClaimsIdentity> Authenticate(AccountDTO account)
-        {
-            ClaimsIdentity identity = null;            
-            
-            var user = await UnitOfWork.UserManager.FindAsync(account.Email, account.Password);
-
-            if (user == null)
-                throw IdentityException.UserNotFound(account.Email);
-            
-            identity = await UnitOfWork.UserManager.CreateIdentityAsync(user,
-                DefaultAuthenticationTypes.ApplicationCookie);
-
-            return identity;
         }
 
         public AccountDTO GetUserByName(string userName)
