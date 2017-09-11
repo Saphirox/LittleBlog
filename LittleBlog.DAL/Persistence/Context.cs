@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace LittleBlog.DAL.Persistence
 {
+    using LittleBlog.Entities.Shared;
     using System;
     using System.Data.Entity;
     using System.Linq;
@@ -27,5 +28,6 @@ namespace LittleBlog.DAL.Persistence
         public IDbSet<Comment> Comments { get; set; }
         public IDbSet<Image> Images { get; set; }
         public IDbSet<Account> Accounts { get; set; }
+        public IDbSet<Log> Logs { get; set; }
     }
 }

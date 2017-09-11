@@ -63,6 +63,8 @@
     <Compile Include="Identity\AppUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\Entity.cs" />
+    <Compile Include="Shared\Log.cs" />
+    <Compile Include="Shared\LogStatus.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

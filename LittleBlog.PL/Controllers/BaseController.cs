@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
 using LittleBlog.BLL.Services;
 using LittleBlog.Dtos.Identity;
-using LittleBlog.Entities.Identity;
 using LittleBlog.ViewModels.Identity;
 using Microsoft.AspNet.Identity;
+using LittleBlog.Entities.Shared;
 
 namespace LittleBlog.PL.Controllers
 {
@@ -19,20 +16,18 @@ namespace LittleBlog.PL.Controllers
         protected readonly IAccountService AccountService;
         protected readonly IMapper Mapper;
         protected readonly IAuthenticateService AuthenticateService;
-
-        public BaseController(IAuthenticateService authenticateService)
-        {
-            AuthenticateService = authenticateService;
-        }
+        protected readonly ILoggerService LoggerService;
 
         public BaseController(
             IAccountService accountService, 
             IMapper mapper, 
-            IAuthenticateService authenticateService)
+            IAuthenticateService authenticateService,
+            ILoggerService loggerService)
         {
             AccountService = accountService;
             Mapper = mapper;
             AuthenticateService = authenticateService;
+            LoggerService = loggerService;
         }
         
         /// <summary>
@@ -63,6 +58,7 @@ namespace LittleBlog.PL.Controllers
             }
             catch (DbUpdateException ex)
             {
+                LoggerService.Log(LogStatus.Danger, ex.Message, ex.Source);
                 result = View("Error", ex.Message);
             }
             catch (Exception ex)
@@ -88,6 +84,7 @@ namespace LittleBlog.PL.Controllers
             }
             catch (DbUpdateException ex)
             {
+                LoggerService.Log(LogStatus.Danger, ex.Message, ex.Source);
                 result = View("Error", ex.Message);
             }
             catch (Exception ex)

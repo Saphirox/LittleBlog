@@ -15,7 +15,7 @@
             if (obj.GetType() != this.GetType())
                 return false;
 
-            return ((Entity)obj).Id == this.Id;
+            return ((Entity)obj).Id == Id;
         }
 
         public override int GetHashCode()

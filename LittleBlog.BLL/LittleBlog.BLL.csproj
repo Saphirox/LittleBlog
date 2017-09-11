@@ -98,12 +98,14 @@
     <Compile Include="Services.Implementation\AuthenticateService.cs" />
     <Compile Include="Services.Implementation\CommentService.cs" />
     <Compile Include="Services.Implementation\FileService.cs" />
+    <Compile Include="Services.Implementation\LoggerService.cs" />
     <Compile Include="Services.Implementation\Service.cs" />
     <Compile Include="Services\IArticleService.cs" />
     <Compile Include="Services\IAuthenticateService.cs" />
     <Compile Include="Services\ICommentService.cs" />
     <Compile Include="Services\ICounterService.cs" />
     <Compile Include="Services\IFileService.cs" />
+    <Compile Include="Services\ILoggerService.cs" />
     <Compile Include="Services\IPreviewArticleService.cs" />
     <Compile Include="Services\IAccountService.cs" />
   </ItemGroup>

@@ -25,8 +25,10 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
             IArticleService articleService,
             IAccountService accountService,
             ICommentService commentService,
-            IMapper mapper, 
-            IFileService fileService) : base(accountService, mapper)
+            IAuthenticateService authenticateService,
+            IMapper mapper,
+            IFileService fileService,
+            ILoggerService loggerService) : base(accountService, mapper, authenticateService, loggerService)
         {
             this._articleService = articleService;
             this._commentService = commentService;

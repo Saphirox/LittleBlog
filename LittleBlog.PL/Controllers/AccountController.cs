@@ -18,8 +18,9 @@ namespace LittleBlog.PL.Controllers
         public AccountController(
             IAccountService accountService,
             IMapper mapper,
-            IAuthenticateService authenticateService) 
-            : base(accountService, mapper, authenticateService)
+            IAuthenticateService authenticateService, 
+            ILoggerService loggerService) 
+            : base(accountService, mapper, authenticateService, loggerService)
         {}
         
         [HttpGet]
