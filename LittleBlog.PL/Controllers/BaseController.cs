@@ -29,11 +29,11 @@ namespace LittleBlog.PL.Controllers
             AuthenticateService = authenticateService;
             LoggerService = loggerService;
         }
-        
+
         /// <summary>
         /// Get current user using email
         /// </summary>
-        public AccountViewModel CurrentUser 
+        public AccountViewModel CurrentUser
         { 
             get {
                 var userDto =  
