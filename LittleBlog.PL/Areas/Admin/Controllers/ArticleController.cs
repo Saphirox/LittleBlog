@@ -25,7 +25,7 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
             IArticleService articleService,
             IAccountService accountService,
             ICommentService commentService,
-            IAuthenticateService authenticateService,
+            IAuthenticationService authenticateService,
             IMapper mapper,
             IFileService fileService,
             ILoggerService loggerService) : base(accountService, mapper, authenticateService, loggerService)
@@ -44,7 +44,7 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
 
         [HttpPost]
         [Route("create")]
-        public ActionResult CreateArticle(CreateArticleViewModel model, IEnumerable<HttpPostedFileBase> file)
+        public ActionResult CreateArticle(CreateArticleViewModel model, IEnumerable<HttpPostedFileBase> files)
         {
 
             if (!ModelState.IsValid)
@@ -57,7 +57,8 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
             {
                 var article =  Mapper.Map<CreateArticleViewModel, CreateArticleDTO>(model);
 
-                article.Images = GetImagesNameAndSaveOnServer(file);
+                if (files != null)
+                    article.Images = GetImagesNameAndSaveOnServer(files);
                 
                 this._articleService.AddArticle(article);
                 

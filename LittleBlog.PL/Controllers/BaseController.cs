@@ -15,13 +15,13 @@ namespace LittleBlog.PL.Controllers
     {
         protected readonly IAccountService AccountService;
         protected readonly IMapper Mapper;
-        protected readonly IAuthenticateService AuthenticateService;
+        protected readonly IAuthenticationService AuthenticateService;
         protected readonly ILoggerService LoggerService;
 
         public BaseController(
             IAccountService accountService, 
             IMapper mapper, 
-            IAuthenticateService authenticateService,
+            IAuthenticationService authenticateService,
             ILoggerService loggerService)
         {
             AccountService = accountService;

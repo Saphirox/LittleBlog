@@ -11,7 +11,7 @@ namespace LittleBlog.BLL.Services.Implementation
 {
     public class LoggerService : Service<ILoggerUnitOfWork>, ILoggerService
     {
-        protected LoggerService(
+        public LoggerService(
             ILoggerUnitOfWork unitOfWork, 
             IMapper mapper) : base(unitOfWork, mapper)
         {}

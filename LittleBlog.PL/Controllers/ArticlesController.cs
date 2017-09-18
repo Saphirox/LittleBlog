@@ -18,9 +18,9 @@ namespace LittleBlog.PL.Controllers
         private readonly ICommentService _commentService;
 
         public ArticlesController(
-            IArticleService articleService, 
-            IAccountService accountService, 
-            IAuthenticateService authenticateService, 
+            IArticleService articleService,
+            IAccountService accountService,
+            IAuthenticationService authenticateService,
             ICommentService commentService,
             ILoggerService loggerService,
             IMapper mapper) : base(accountService, mapper, authenticateService, loggerService)

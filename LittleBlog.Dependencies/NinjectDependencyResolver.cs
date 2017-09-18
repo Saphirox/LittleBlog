@@ -42,7 +42,7 @@ namespace LittleBlog.Dependencies
             _kernel.Bind<IFileService>().To<FileService>().InRequestScope();
             _kernel.Bind<ICommentService>().To<CommentService>().InRequestScope();
             _kernel.Bind<IAccountService>().To<AccountService>().InRequestScope();
-            _kernel.Bind<IAuthenticateService>().To<AuthenticateService>().InRequestScope();
+            _kernel.Bind<IAuthenticationService>().To<AuthenticationService>().InRequestScope();
             _kernel.Bind<ILoggerService>().To<LoggerService>().InRequestScope();
 
             /* Repositories */
@@ -51,7 +51,6 @@ namespace LittleBlog.Dependencies
             _kernel.Bind<ILoggerRepository>().To<LoggerRepository>().InRequestScope();
 
             /* Unit of Works*/
-            _kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
             _kernel.Bind<IIdentityUnitOfWork>().To<IdentityUnitOfWork>().InRequestScope();
             _kernel.Bind<ILoggerUnitOfWork>().To<LoggerUnitOfWork>().InRequestScope();
             _kernel.Bind<IArticleUnitOfWork>().To<ArticleUnitOfWork>().InRequestScope();

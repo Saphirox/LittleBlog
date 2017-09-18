@@ -4,7 +4,7 @@ using LittleBlog.Dtos.Identity;
 
 namespace LittleBlog.BLL.Services
 {
-    public interface IAuthenticateService
+    public interface IAuthenticationService
     {
         Task<ClaimsIdentity> Authenticate(AccountDTO account);
     }

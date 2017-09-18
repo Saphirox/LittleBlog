@@ -8,9 +8,9 @@ using Microsoft.AspNet.Identity;
 
 namespace LittleBlog.BLL.Services.Implementation
 {
-    public class AuthenticateService : Service<IIdentityUnitOfWork>, IAuthenticateService
+    public class AuthenticationService : Service<IIdentityUnitOfWork>, IAuthenticationService
     {
-        public AuthenticateService(IIdentityUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        public AuthenticationService(IIdentityUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
 
