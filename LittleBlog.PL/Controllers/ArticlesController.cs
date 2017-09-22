@@ -14,19 +14,19 @@ namespace LittleBlog.PL.Controllers
     [RoutePrefix("articles")]
     public class ArticlesController : BaseController
     {
-        private readonly IArticleService _articleService;
         private readonly ICommentService _commentService;
+        private readonly IViewArticleService _viewArticleService;
 
         public ArticlesController(
-            IArticleService articleService,
+            IViewArticleService viewArticleService,
             IAccountService accountService,
             IAuthenticationService authenticateService,
             ICommentService commentService,
             ILoggerService loggerService,
             IMapper mapper) : base(accountService, mapper, authenticateService, loggerService)
         {
-            this._articleService = articleService;
-            this._commentService = commentService;
+            _viewArticleService = viewArticleService;
+            _commentService = commentService;
         }
 
 
@@ -42,11 +42,11 @@ namespace LittleBlog.PL.Controllers
         {
             return CreateActionResult(() =>
             {
-                var articlesPreviewDto = this._articleService.GetPreviewArticles(startWith, count, 20);
+                var articlesPreviewDto = this._viewArticleService.GetPreviewArticles(startWith, count, 20);
 
                 var viewModelsArticles = Mapper.Map<IEnumerable<GetArticleDTO>, IEnumerable<GetArticleViewModel>>(articlesPreviewDto);
 
-                return View(new PreviewArticlesViewModel(viewModelsArticles, this._articleService.CountArticles()));
+                return View(new PreviewArticlesViewModel(viewModelsArticles, this._viewArticleService.CountArticles()));
             });
         }
 
@@ -62,7 +62,7 @@ namespace LittleBlog.PL.Controllers
             return CreateActionResult(() =>
             {
                 return View(Mapper.Map<GetArticleDTO, GetArticleViewModel>
-                    (this._articleService.GetArticleById(id)));
+                    (this._viewArticleService.GetArticleById(id)));
             });
         }
 
@@ -83,7 +83,7 @@ namespace LittleBlog.PL.Controllers
                 this._commentService.CreateCommentByArticleId(dto, articleId);
 
                 return RedirectToAction("GetArticle", (Mapper.Map<GetArticleDTO, GetArticleViewModel>
-                    (this._articleService.GetArticleById(articleId))));
+                    (this._viewArticleService.GetArticleById(articleId))));
             });
         }
     }

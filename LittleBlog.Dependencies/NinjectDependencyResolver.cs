@@ -39,6 +39,7 @@ namespace LittleBlog.Dependencies
         {
             /* Services */
             _kernel.Bind<IArticleService>().To<ArticleService>().InRequestScope();
+            _kernel.Bind<IViewArticleService>().To<ViewArticleService>().InRequestScope();
             _kernel.Bind<IFileService>().To<FileService>().InRequestScope();
             _kernel.Bind<ICommentService>().To<CommentService>().InRequestScope();
             _kernel.Bind<IAccountService>().To<AccountService>().InRequestScope();

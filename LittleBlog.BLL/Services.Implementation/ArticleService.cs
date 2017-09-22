@@ -23,67 +23,32 @@ namespace LittleBlog.BLL.Services.Implementation
 
         public void AddArticle(CreateArticleDTO articleDto)
         {
-            var entity = Mapper.Map<CreateArticleDTO, Article>(articleDto);
+            var article = Mapper.Map<CreateArticleDTO, Article>(articleDto);
 
             var tagUtil = new TagUtil(UnitOfWork.TagRepository);
             
-            entity.Tags = tagUtil.GetTags(entity);
+            article.Tags = tagUtil.GetTags(article);
 
-            UnitOfWork.ArticleRepository.Add(entity);
+            UnitOfWork.ArticleRepository.Add(article);
             
             UnitOfWork.Commit();
         }
 
-        public IEnumerable<GetArticleDTO> GetPreviewArticles(int startWith=0, int count=0, int countOfWords=0)
+        public void UpdateArticle(GetArticleDTO articleDto)
         {
-            if (count == 0)
-            {
-                return Array.Empty<GetArticleDTO>();
-            }
-            
-            var entities = UnitOfWork.ArticleRepository.GetAll();
-            
-            var dtos = Mapper.Map<IEnumerable<Article>, IEnumerable<GetArticleDTO>>(
-                entities);
-            
-            return dtos.Select(a => {
-                    a.Description = string.Join(" ", a.Description.Split(' ').Take(countOfWords)); return a;
-                }).Skip(startWith).Take(count);
-            
-        }
-
-        public GetArticleDTO GetArticleById(int id)
-        {
-            return Mapper.Map<Article, GetArticleDTO>(
-                UnitOfWork.ArticleRepository.GetById(id)
-            );
-        }
-
-        public void UpdateArticle(GetArticleDTO getArticleDto)
-        {
-            UnitOfWork.ArticleRepository.Update(Mapper.Map<GetArticleDTO, Article>(getArticleDto));
+            UnitOfWork.ArticleRepository.Update(Mapper.Map<GetArticleDTO, Article>(articleDto));
             
             UnitOfWork.Commit();
         }
 
         public void DeleteArticle(int id)
         {
-            var entity = UnitOfWork.ArticleRepository.GetById(id);
+            var article = UnitOfWork.ArticleRepository.GetById(id);
             
-            UnitOfWork.ArticleRepository.Delete(entity);
+            UnitOfWork.ArticleRepository.Delete(article);
             
             UnitOfWork.Commit();
         }
 
-        public IEnumerable<GetArticleDTO> GetArticlesByTags(IEnumerable<TagDTO> dtoTags)
-        {
-            var tags = Mapper.Map<IEnumerable<TagDTO>, IEnumerable<Tag>>(dtoTags);
-            
-            return Mapper.Map<IEnumerable<Article>, IEnumerable<GetArticleDTO>>(
-                UnitOfWork.ArticleRepository.GetAll()
-                    .Where(a => a.Tags.Any(s => tags.Contains(s))));
-        }
-
-        public int CountArticles() => UnitOfWork.ArticleRepository.GetAll().Count();
     }
 }

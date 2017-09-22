@@ -42,7 +42,7 @@ namespace LittleBlog.Tests
         public void GetFileByName_Test()
         {
             _mock.Setup(setup => setup.GetAll()).Returns(new[] {article});
-            Assert.AreEqual("file.jpg", _fileService.GetFileByName("file").ImageUrl);
+            Assert.AreEqual("file.jpg", _fileService.GetImageByName("file").ImageUrl);
         } 
     }
 }

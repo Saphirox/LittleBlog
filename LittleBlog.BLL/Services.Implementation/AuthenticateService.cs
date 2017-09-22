@@ -14,14 +14,14 @@ namespace LittleBlog.BLL.Services.Implementation
         {
         }
 
-        public async Task<ClaimsIdentity> Authenticate(AccountDTO account)
+        public async Task<ClaimsIdentity> Authenticate(AccountDTO accountDto)
         {
             ClaimsIdentity identity = null;            
             
-            var user = await UnitOfWork.UserManager.FindAsync(account.Email, account.Password);
+            var user = await UnitOfWork.UserManager.FindAsync(accountDto.Email, accountDto.Password);
 
             if (user == null)
-                throw IdentityException.UserNotFound(account.Email);
+                throw IdentityException.UserNotFound(accountDto.Email);
             
             identity = await UnitOfWork.UserManager.CreateIdentityAsync(user,
                 DefaultAuthenticationTypes.ApplicationCookie);

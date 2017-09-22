@@ -4,6 +4,6 @@ namespace LittleBlog.BLL.Services
 {
     public interface IFileService
     {
-        ImageDTO GetFileByName(string name);
+        ImageDTO GetImageByName(string name);
     }
 }

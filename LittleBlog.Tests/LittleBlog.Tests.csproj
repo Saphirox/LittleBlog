@@ -79,6 +79,7 @@
     <Compile Include="FileTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagUtilTest.cs" />
+    <Compile Include="ViewArticleServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

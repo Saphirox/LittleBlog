@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using LittleBlog.BLL.Infrastructure;
-using LittleBlog.DAL.Persistence.UnitsOfWork;
 using LittleBlog.DAL.Repositories;
-using LittleBlog.DAL.UnitOfWorks;
 using LittleBlog.Entities.Article;
 using Moq;
 using NUnit.Framework;

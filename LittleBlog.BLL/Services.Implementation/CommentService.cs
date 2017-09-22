@@ -13,10 +13,10 @@ namespace LittleBlog.BLL.Services.Implementation
         {
         }
         
-        public void CreateCommentByArticleId(CommentDTO comment, int id)
+        public void CreateCommentByArticleId(CommentDTO commentDto, int id)
         {
             var article = UnitOfWork.ArticleRepository.GetById(id);
-            article.Comments.Add(Mapper.Map<CommentDTO, Comment>(comment));
+            article.Comments.Add(Mapper.Map<CommentDTO, Comment>(commentDto));
             UnitOfWork.Commit();
         }
 

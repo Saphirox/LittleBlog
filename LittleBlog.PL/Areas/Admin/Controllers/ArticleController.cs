@@ -30,8 +30,8 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
             IFileService fileService,
             ILoggerService loggerService) : base(accountService, mapper, authenticateService, loggerService)
         {
-            this._articleService = articleService;
-            this._commentService = commentService;
+            _articleService = articleService;
+            _commentService = commentService;
             _fileService = fileService;
         }
 
@@ -97,7 +97,7 @@ namespace LittleBlog.PL.Areas.Admin.Controllers
         {
             return CreateActionResult(() =>
             {
-                ImageDTO fileName = this._fileService.GetFileByName(name);
+                ImageDTO fileName = this._fileService.GetImageByName(name);
 
                 string fileExt = Path.GetExtension(fileName.ImageUrl)?.Remove(0, 1);
                 

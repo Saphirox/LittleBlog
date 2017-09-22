@@ -15,18 +15,18 @@ namespace LittleBlog.BLL.Services.Implementation
         public FileService(IArticleUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {}
         
-        public ImageDTO GetFileByName(string name)
+        public ImageDTO GetImageByName(string imageName)
         {
             string[] ext = {".jpg", ".jpeg", ".png", ".gif"};
 
             ImageDTO image = Mapper.Map<Image, ImageDTO>(
                 UnitOfWork.ArticleRepository.GetAll()
                     .SelectMany(a => a.Images).FirstOrDefault(i => 
-                        Path.GetFileNameWithoutExtension(i.ImageUrl) == name)
+                        Path.GetFileNameWithoutExtension(i.ImageUrl) == imageName)
             );
             
             if (image == null)
-                throw FileException.FileNameNotExists(name);
+                throw FileException.FileNameNotExists(imageName);
 
             return image;
         }
