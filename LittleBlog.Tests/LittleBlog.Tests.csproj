@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="AccountServiceTest.cs" />
     <Compile Include="ArticleServiceTests.cs" />
+    <Compile Include="FakeArticles.cs" />
     <Compile Include="FileTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagUtilTest.cs" />

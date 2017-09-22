@@ -25,33 +25,36 @@ namespace LittleBlog.Tests
         
         private IAccountService _accountService;
         private IMapper _mapper;
-        
+
+        private IList<AppUser> userContext;
+
+
         [SetUp]
         public void SetUp()
-        {}
-
-        [Test]
-        public void CreateUser_Test()
         {
-            IList<AppUser> userContext = new List<AppUser>();
-
             _mapper = MapperBuilder.BuildMapper();
-            
-            /* User Manager */
             _mockUserStore = new Mock<IUserStore<AppUser>>();
             _mockAppUserManager = new Mock<AppUserManager>(_mockUserStore.Object);
-            
+
             _mockAppUserManager.Setup(s => s.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Success))
                 .Callback((AppUser a, string password) =>
                 {
-                    userContext.Add(a); 
+                    userContext.Add(a);
                 });
-            
+
             _mockIdentityUnitOfWork = new Mock<IIdentityUnitOfWork>();
-        
+
             _mockIdentityUnitOfWork.Setup(s => s.UserManager)
                 .Returns(_mockAppUserManager.Object);
+
+            userContext = new List<AppUser>();
+
+        }
+
+        [Test]
+        public void CreateUser_Test()
+        {
 
             _accountService = new AccountService(_mockIdentityUnitOfWork.Object, _mapper);
             

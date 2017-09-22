@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LittleBlog.Exceptions
 {
@@ -14,22 +10,22 @@ namespace LittleBlog.Exceptions
 
         public static FileException UnpropriateFileExtension(string name)
         {
-            return new FileException($"Unpropriate file extenstion {name}");
+            return new FileException($"Unpropriate file extension {name}");
         }
 
         public static FileException FileExists(string path)
         {
-            return new FileException($"File is exits in path {path}");
+            return new FileException($"File is exist in path {path}");
         }
 
         public static FileException NotFileExists(string path)
         {
-            return new FileException($"File is not exits in path {path}");
+            return new FileException($"File is not exist in path {path}");
         }
 
         public static FileException FileNameNotExists(string name)
         {
-            return new FileException($"File name { name } is not exits");
+            return new FileException($"File name { name } is not exist");
 
         }
     }

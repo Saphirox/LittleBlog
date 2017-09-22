@@ -19,61 +19,50 @@ namespace LittleBlog.Tests
     public class ArticleServiceTests
     {
         private Mock<IArticleRepository> _fakeArticleRepository;
-        private IArticleUnitOfWork _articleUnitOfWork;
+        private Mock<IArticleUnitOfWork> _articleUnitOfWork;
         private Mock<IArticleUnitOfWork> _fakeArticleUnitOfWork;
-        private ArticleService _articleService;
+        private ArticleService _sut;
         private IMapper _mapper;
-        private Mock<ITagRepository> _mockTagRepository;
+        private Mock<ITagRepository> _fakeTagRepository;
 
-        private static readonly Article FakeArticle = new Article()
-        {
-            Description = "Lorem ipsum else some count",
-            Header = "Lorem",
-            Id = 1,
-            TimeForRead = 20,
-        };
+        private Article FakeArticle;
         
         [SetUp]
         public void SetUp()
         {
+            FakeArticle = FakeArticles.CreateArticleWithOneTagAndOneDate();
+
             this._fakeArticleRepository = new Mock<IArticleRepository>();
            
-            this._mockTagRepository = new Mock<ITagRepository>();
-            
-            this._articleUnitOfWork = new ArticleUnitOfWork(null, _fakeArticleRepository.Object, _mockTagRepository.Object);
-            
-            _mapper = MapperBuilder.BuildMapper();
-            
-            this._articleService = new ArticleService(_articleUnitOfWork, _mapper);
+            this._fakeTagRepository = new Mock<ITagRepository>();
 
             _fakeArticleUnitOfWork = new Mock<IArticleUnitOfWork>();
 
-            FakeArticle.PublishEditDates = new List<PublishEditDate>()
-            {
-                new PublishEditDate() { Article = FakeArticle, Id = 1, Date = DateTime.UtcNow }
-            };
-            
-            FakeArticle.Tags = new List<Tag>()
-            {
-                new Tag() { Name = "Hello" }
-            };
+            this._articleUnitOfWork = new Mock<IArticleUnitOfWork>();
 
+            this._articleUnitOfWork.Setup(s => s.ArticleRepository).Returns(_fakeArticleRepository.Object);
+
+            this._articleUnitOfWork.Setup(s => s.TagRepository).Returns(_fakeTagRepository.Object);
+
+            _fakeArticleRepository.Setup(s => s.GetAll()).Returns(new[] { FakeArticle });
+
+
+            _mapper = MapperBuilder.BuildMapper();
+            
+            this._sut = new ArticleService(_articleUnitOfWork.Object, _mapper);
         }
 
         [Test]
         public void Counter_Test()
         {
-            _fakeArticleRepository.Setup(s => s.GetAll()).Returns(new[] {FakeArticle});
 
-            Assert.AreEqual(_articleService.CountArticles(), 1);
+            Assert.AreEqual(_sut.CountArticles(), 1);
         }
         
         [Test]
         public void FindingById_Test()
         {
-            _fakeArticleRepository.Setup(s => s.GetById(It.IsAny<int>())).Returns( FakeArticle );
-
-            var result = _articleService.GetArticleById(1);
+            var result = _sut.GetArticleById(1);
              
             Assert.NotNull(result);
             Assert.AreEqual(FakeArticle.Id, result.Id);
@@ -82,27 +71,25 @@ namespace LittleBlog.Tests
         [Test]
         public void GetArticlesByTags_Test()
         {
-            _fakeArticleRepository.Setup(s => s.GetAll()).Returns(new[] {FakeArticle});
+            FakeArticle.Tags = FakeArticles.CreateTags();
+
+            var article = _sut.GetArticlesByTags(FakeArticles.CreateTagsDto()).First();
             
-            var l = _articleService.GetArticlesByTags(new[] {new TagDTO() {Name = "Hello"}}).First();
-            
-            Assert.NotNull(l);
-            Assert.AreEqual(l.Header, FakeArticle.Header);
+            Assert.NotNull(article);
+            Assert.AreEqual(article.Header, FakeArticle.Header);
         }
 
         [Test]
         public void GetPreviewArticlesOneArticle_Test()
         {
-            _fakeArticleRepository.Setup(s => s.GetAll()).Returns(new[] {FakeArticle});
-
             const int count = 1;
             const int startWith = 0;
             const int words = 3;
             
-            var l = _articleService.GetPreviewArticles(startWith, count, words).First();
+            var article = _sut.GetPreviewArticles(startWith, count, words).First();
             
-            Assert.AreEqual(l.Header, FakeArticle.Header);
-            Assert.AreEqual(l.Description, "Lorem ipsum else");
+            Assert.AreEqual(article.Header, FakeArticle.Header);
+            Assert.AreEqual(article.Description, "Lorem ipsum else");
         }
         
         [Test]
@@ -110,42 +97,38 @@ namespace LittleBlog.Tests
         {
             _fakeArticleRepository.Setup(s => s.GetAll()).Returns(new[] {FakeArticle});
 
+            // Count of articles
             const int count = 0;
+            
+            // Start with article
             const int startWith = 0;
+
+            // Count of words which would be display in preview mode
             const int words = 3;
             
-            var l = _articleService.GetPreviewArticles(startWith, count, words);
+            var article = _sut.GetPreviewArticles(startWith, count, words);
             
-            Assert.NotNull(l);
-            Assert.IsTrue(!l.Any());
+            Assert.NotNull(article);
+            Assert.IsTrue(!article.Any());
         }
 
         [Test]
-        public void AddArticle_Test()
+        public void AddArticleWithoutTags_Test()
         {
-            this._articleService = new ArticleService(_fakeArticleUnitOfWork.Object, _mapper);
-            
-            CreateArticleDTO article = new CreateArticleDTO()
-            {
-                Description = "Lorem ipsum else some count",
-                Header = "Lorem",
-            };
-            
-            article.Tags = new[] {new TagDTO { Name = "Hello" }, new TagDTO {Name = "World"} };
-            
+            this._sut = new ArticleService(_fakeArticleUnitOfWork.Object, _mapper);
+
+            var article = FakeArticles.CreateArticleWithTwoTagsDto();
+
             List<Article> dbArticles = new List<Article>();
 
             _fakeArticleRepository.Setup(m => m.Add(It.IsAny<Article>()))
                 .Callback((Article a) => { dbArticles.Add(a); }).Verifiable();
             
-            _mockTagRepository.Setup(s => s.GetAll()).Returns(Array.Empty<Tag>()).Verifiable();
+            _fakeTagRepository.Setup(s => s.GetAll()).Returns(Array.Empty<Tag>()).Verifiable();
 
             _fakeArticleUnitOfWork.Setup(setup => setup.Commit()).Returns(1);
             
-            _fakeArticleUnitOfWork.Setup(setup => setup.TagRepository).Returns(_mockTagRepository.Object);
-            _fakeArticleUnitOfWork.Setup(setup => setup.ArticleRepository).Returns(_fakeArticleRepository.Object);
-            
-            _articleService.AddArticle(article);
+            _sut.AddArticle(article);
             
             Assert.NotZero(dbArticles.Count);
             
@@ -157,40 +140,22 @@ namespace LittleBlog.Tests
         {
             var dbArticles = new List<Article>();
             var dbTags = new List<Tag>();
+            var tags = FakeArticles.CreateTags();
+            dbTags.AddRange(tags);
 
-            var one1 = new Tag {Name = "One"};
-            var two2 = new Tag {Name = "Two"};
-            dbTags.Add(one1);
-            dbTags.Add(two2);
-            
-            this._articleService = new ArticleService(_fakeArticleUnitOfWork.Object, _mapper);
-            
-            CreateArticleDTO article = new CreateArticleDTO()
-            {
-                Description = "Lorem ipsum else some count else description porko rosso",
-                Header = "Lorem",
-            };
-            
-            article.Tags = new[] {new TagDTO { Name = "One" }, new TagDTO {Name = "Two"} };    
-            
+            this._sut = new ArticleService(_fakeArticleUnitOfWork.Object, _mapper);
+
             _fakeArticleRepository.Setup(m => m.Add(It.IsAny<Article>()))
                 .Callback((Article a) => { dbArticles.Add(a); }).Verifiable();
             
-            _mockTagRepository.Setup(s => s.GetAll()).Returns(dbTags).Verifiable();
-
             _fakeArticleUnitOfWork.Setup(setup => setup.Commit()).Returns(1).Verifiable();
-            
-            _fakeArticleUnitOfWork.Setup(setup => setup.TagRepository).Returns(_mockTagRepository.Object);
-            _fakeArticleUnitOfWork.Setup(setup => setup.ArticleRepository).Returns(_fakeArticleRepository.Object);
-
            
-            
-            _articleService.AddArticle(article);
+            _sut.AddArticle(FakeArticles.CreateArticleWithTwoTagsDto());
             
             Assert.AreEqual(2, dbArticles[0].Tags.Count);
             
-            Assert.AreSame(dbArticles[0].Tags.ToList()[0], one1);
-            Assert.AreSame(dbArticles[0].Tags.ToList()[1], two2);
+            Assert.AreSame(dbArticles[0].Tags.ToList()[0], tags[0]);
+            Assert.AreSame(dbArticles[0].Tags.ToList()[1], tags[1]);
         }
 
         [Test]
@@ -198,24 +163,14 @@ namespace LittleBlog.Tests
         {
             var dbArticles = new List<Article>();
             
-            this._articleService = new ArticleService(_fakeArticleUnitOfWork.Object, _mapper);
-            
-            CreateArticleDTO article = new CreateArticleDTO()
-            {
-                Id = 2,
-                Description = "Lorem ipsum else some count else description porko rosso",
-                Header = "Lorem",
-            };
-            
-            article.Tags = new[] {new TagDTO { Name = "One" }, new TagDTO {Name = "Two"} };   
+            this._sut = new ArticleService(_fakeArticleUnitOfWork.Object, _mapper);
+
+            CreateArticleDTO article = FakeArticles.CreateArticleWithTwoTagsDto();
             
             _fakeArticleRepository.Setup(m => m.Add(It.IsAny<Article>()))
                 .Callback((Article a) => { dbArticles.Add(a); }).Verifiable();
             
             _fakeArticleUnitOfWork.Setup(setup => setup.Commit()).Returns(1).Verifiable();
-            
-            _fakeArticleUnitOfWork.Setup(setup => setup.TagRepository).Returns(_mockTagRepository.Object);
-            _fakeArticleUnitOfWork.Setup(setup => setup.ArticleRepository).Returns(_fakeArticleRepository.Object);
             
             _fakeArticleRepository.Setup(setup => setup.Update(It.IsAny<Article>())).Callback((Article a) =>
             {
@@ -223,11 +178,9 @@ namespace LittleBlog.Tests
                 dbArticles.Add(a);
             });
             
-            _articleService.AddArticle(article);
+            _sut.AddArticle(article);
             
-            _fakeArticleUnitOfWork.Setup(setup => setup.ArticleRepository).Returns(_fakeArticleRepository.Object);
-            
-            _articleService.UpdateArticle(new GetArticleDTO() { Id = 2, Header = "Lorem ipsum"});
+            _sut.UpdateArticle(new GetArticleDTO() { Id = 2, Header = "Lorem ipsum"});
             
             Assert.AreEqual(dbArticles[0].Header, "Lorem ipsum");
         }
@@ -237,40 +190,18 @@ namespace LittleBlog.Tests
         {
             var dbArticles = new List<Article>();
             
-            this._articleService = new ArticleService(_fakeArticleUnitOfWork.Object, _mapper);
-            
-            CreateArticleDTO article = new CreateArticleDTO()
-            {
-                Id = 2,
-                Description = "Lorem ipsum else some count else description porko rosso",
-                Header = "Lorem",
-            };
-            
-            article.Tags = new[] {new TagDTO { Name = "One" }, new TagDTO {Name = "Two"} };   
-            
-            _fakeArticleRepository.Setup(m => m.Add(It.IsAny<Article>()))
-                .Callback((Article a) => { dbArticles.Add(a); }).Verifiable();
+            CreateArticleDTO article = FakeArticles.CreateArticleWithTwoTagsDto();
             
             _fakeArticleUnitOfWork.Setup(setup => setup.Commit()).Returns(1).Verifiable();
 
-            _fakeArticleRepository.Setup(setup => setup.GetById(2)).Returns(new Article()
-            {
-                Id = 2,
-                Description = "Lorem ipsum else some count else description porko rosso",
-                Header = "Lorem",
-            });
+            _fakeArticleRepository.Setup(setup => setup.GetById(2)).Returns(FakeArticles.CreateArticle());
             
             _fakeArticleRepository.Setup(setup => setup.Delete(It.IsAny<Article>())).Callback((Article a) =>
-            {
-                dbArticles.Remove(a);
-            });
+            {dbArticles.Remove(a);});
             
-            _fakeArticleUnitOfWork.Setup(setup => setup.TagRepository).Returns(_mockTagRepository.Object);
-            _fakeArticleUnitOfWork.Setup(setup => setup.ArticleRepository).Returns(_fakeArticleRepository.Object);
+            _sut.AddArticle(article);
             
-            _articleService.AddArticle(article);
-            
-            _articleService.DeleteArticle(2);
+            _sut.DeleteArticle(2);
             
             Assert.IsTrue(!dbArticles.Any());
         }
