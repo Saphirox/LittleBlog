@@ -141,6 +141,7 @@ namespace LittleBlog.Tests
             var dbArticles = new List<Article>();
             var dbTags = new List<Tag>();
             var tags = FakeArticles.CreateTags();
+
             dbTags.AddRange(tags);
 
             this._sut = new ArticleService(_fakeArticleUnitOfWork.Object, _mapper);
@@ -179,10 +180,12 @@ namespace LittleBlog.Tests
             });
             
             _sut.AddArticle(article);
+
+            GetArticleDTO getArticleDto = FakeArticles.CreateGetArticle();
+
+            _sut.UpdateArticle(getArticleDto);
             
-            _sut.UpdateArticle(new GetArticleDTO() { Id = 2, Header = "Lorem ipsum"});
-            
-            Assert.AreEqual(dbArticles[0].Header, "Lorem ipsum");
+            Assert.AreEqual(dbArticles[0].Header, getArticleDto.Header);
         }
 
         [Test]
@@ -201,7 +204,7 @@ namespace LittleBlog.Tests
             
             _sut.AddArticle(article);
             
-            _sut.DeleteArticle(2);
+            _sut.DeleteArticle(article.Id);
             
             Assert.IsTrue(!dbArticles.Any());
         }

@@ -14,14 +14,25 @@ namespace LittleBlog.Tests
 
         public static CreateArticleDTO CreateArticleWithTwoTagsDto()
            => new CreateArticleDTO()
+           {
+               Id = 2,
+               Description = "Lorem ipsum else some count else description porko rosso",
+               Header = "Lorem",
+               Tags = CreateTagsDto()
+           };
+
+        public static GetArticleDTO CreateGetArticle()
+            => new GetArticleDTO
             {
+                Id = 2,
                 Description = "Lorem ipsum else some count else description porko rosso",
                 Header = "Lorem",
                 Tags = CreateTagsDto()
-           };
+            };
 
         public static Article CreateArticle()
-        => new Article  {
+        => new Article
+        {
 
             Id = 2,
             Description = "Lorem ipsum else some count else description porko rosso",
@@ -35,7 +46,8 @@ namespace LittleBlog.Tests
            => new[] { new Tag { Name = "FirstTag" }, new Tag { Name = "SecondTag" } };
 
         public static Article CreateArticleWithOneTagAndOneDate()
-            => new Article {
+            => new Article
+            {
                 Description = "Lorem ipsum else some count",
                 Header = "Lorem",
                 Id = 1,
@@ -47,3 +59,4 @@ namespace LittleBlog.Tests
         public static IList<PublishEditDate> CreatePublishEditDates(Article article)
            => new[] { new PublishEditDate() { Article = article, Id = publishEditDate++, Date = DateTime.UtcNow } };
     }
+}
