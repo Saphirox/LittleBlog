@@ -38,7 +38,7 @@ namespace LittleBlog.PL.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("get-all")]
-        public ActionResult PreviewArticles(int count=0, int startWith=0)
+        public ActionResult PreviewArticles(int count = 0, int startWith=0)
         {
             return CreateActionResult(() =>
             {

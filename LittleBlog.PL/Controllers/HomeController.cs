@@ -11,7 +11,7 @@ namespace LittleBlog.PL.Controllers
     {
         public ActionResult Index()
         {
-            return RedirectToAction("PreviewArticles", "Articles");
+            return RedirectToAction("PreviewArticles", "Articles", new { startWith=0, count=10 });
         }
 
         [Route("about")]
